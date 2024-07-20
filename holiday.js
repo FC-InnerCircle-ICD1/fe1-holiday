@@ -47,6 +47,11 @@ const fetchAvailableCountries = async () => {
   return request(fetchUrl);
 };
 
+const fetchNextPublicHoliday = async (_country) => {
+  const fetchUrl = `${HOLIDAY_API_URL}/NextPublicHolidaysWorldwide`;
+  return request(fetchUrl);
+};
+
 const checkAvailableCountriesCode = async (countryCode) => {
   try {
     const availableCountries = await fetchAvailableCountries();
@@ -70,10 +75,11 @@ const checkAvailableCountriesCode = async (countryCode) => {
 
   const { isNext, year } = extractYearOrNext(yearOrNext);
   const countryCode = countryCodeInput.toUpperCase();
-  const TODAY = new Date();
 
   try {
-    const holidays = await fetchHolidayYear(countryCode, year);
+    const holidays = isNext
+      ? await fetchNextPublicHoliday(countryCode)
+      : await fetchHolidayYear(countryCode, year);
 
     if (holidays.length === 0) {
       console.log(`No holidays found for ${countryCode} in ${year}`);
@@ -82,12 +88,6 @@ const checkAvailableCountriesCode = async (countryCode) => {
 
     const result = holidays
       .map((holiday) => {
-        if (isNext) {
-          if (new Date(holiday.date).getTime() <= TODAY.getTime()) {
-            return null;
-          }
-        }
-
         return [holiday.date, holiday.name, holiday.localName].join(" ");
       })
       .filter((holiday) => holiday !== null);
