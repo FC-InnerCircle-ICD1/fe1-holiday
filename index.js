@@ -1,7 +1,6 @@
 const [countryCode, year] = process.argv.slice(2);
-const url2 = `/api/v3/NextPublicHolidays/${countryCode}`;
 
-const getHolidayApi = async () => {
+const getHolidaysApi = async () => {
   const url = `https://date.nager.at/api/v3/PublicHolidays/${year}/${countryCode}`;
 
   const data = await fetch(url);
@@ -15,10 +14,9 @@ const getHolidayApi = async () => {
     return;
   }
   const res = await data.json();
-  console.log(res);
   return res;
 };
-const getNextHolidayApi = async () => {
+const getNextHolidaysApi = async () => {
   const url = `https://date.nager.at/api/v3/NextPublicHolidays/${countryCode}`;
   const data = await fetch(url);
 
@@ -27,12 +25,23 @@ const getNextHolidayApi = async () => {
     return;
   }
   const res = await data.json();
-  console.log(res);
   return res;
 };
 
+const printDay = (day) =>
+  console.log(`${day.date} ${day.name} ${day.localName}`);
+
+const printHolidays = async () => {
+  const holidays = await getHolidaysApi();
+  holidays.forEach(printDay);
+};
+const printNextHolidays = async () => {
+  const holidays = await getNextHolidaysApi();
+  holidays.forEach(printDay);
+};
+
 const fetchHolidays = () => {
-  year === "next" ? getNextHolidayApi() : getHolidayApi();
+  year === "next" ? printNextHolidays() : printHolidays();
 };
 
 fetchHolidays(countryCode, year);
