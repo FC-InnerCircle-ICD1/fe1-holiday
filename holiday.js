@@ -34,6 +34,7 @@ const fetchHolidayYear = async (_country, _year) => {
 
   return res.json();
 };
+
 const fetchAvailableCountries = async () => {
   const fetchUrl = `${HOLIDAY_API_URL}/AvailableCountries`;
   const res = await fetch(fetchUrl);
@@ -45,8 +46,26 @@ const fetchAvailableCountries = async () => {
   return res.json();
 };
 
+const checkAvailableCountriesCode = async (countryCode) => {
+  try {
+    const availableCountries = await fetchAvailableCountries();
+    const availableCountryCodes = availableCountries.map(
+      (country) => country.countryCode
+    );
+
+    if (!availableCountryCodes.includes(countryCode.toUpperCase())) {
+      console.error(`Country code ${countryCode} is not available`);
+      process.exit(1);
+    }
+  } catch (error) {
+    console.error("Wrong country code");
+    process.exit(1);
+  }
+};
+
 (async function () {
   checkInputValues(countryCodeInput, yearOrNext);
+  checkAvailableCountriesCode(countryCodeInput);
 
   const year = extractYearOrNext(yearOrNext);
   const countryCode = countryCodeInput.toUpperCase();
