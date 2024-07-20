@@ -2,6 +2,13 @@ const API_HOST = "https://date.nager.at";
 
 const EXPECTED_ARGV_LENGTH = 4;
 
+const isInteger = (str) => {
+  if (str.length === 0) return false;
+
+  const num = Number(str);
+  return Number.isInteger(num) && num.toString() === str;
+};
+
 const validateCountryCode = async (countryCode) => {
   const result = await fetch(`${API_HOST}/api/v3/CountryInfo/${countryCode}`);
   return result.ok;
@@ -22,7 +29,10 @@ const fetchNextHolidays = async (countryCode) => {
 };
 
 const main = async () => {
-  if (process.argv.length !== EXPECTED_ARGV_LENGTH) {
+  if (
+    process.argv.length !== EXPECTED_ARGV_LENGTH ||
+    !(isInteger(process.argv[3]) || process.argv[3] === "next")
+  ) {
     console.error(
       '"node holiday.js 국가코드 연도_또는_next" 형식으로 입력해주세요.'
     );
