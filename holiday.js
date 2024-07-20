@@ -5,8 +5,12 @@ const nextPublicHolidaysUrl = `${baseUrl}NextPublicHolidays`;
 async function getHoliday() {
     const args = process.argv.slice(2);
 
-    const countryCode = args[0];
-    const yearOrNext = args[1];
+    if (args.length !== 2) {
+        console.error('필요인수: 국가코드 연도_또는_next');
+        return;
+    }
+
+    const [countryCode, yearOrNext] = args;
 
     let url;
     if (yearOrNext.toLowerCase() === 'next') {
