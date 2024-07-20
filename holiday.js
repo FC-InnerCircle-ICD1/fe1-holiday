@@ -1,6 +1,7 @@
 const baseUrl = 'https://date.nager.at/api/v3/';
 const publicHolidaysUrl = `${baseUrl}PublicHolidays`;
 const nextPublicHolidaysUrl = `${baseUrl}NextPublicHolidays`;
+const availableCountriesUrl = `${baseUrl}AvailableCountries`;
 
 async function getHoliday() {
     const args = process.argv.slice(2);
@@ -11,6 +12,11 @@ async function getHoliday() {
     }
 
     const [countryCode, yearOrNext] = args;
+
+    if (!await isValidCountryCode(countryCode)) {
+        console.error('Wrong country code');
+        return;
+    }
 
     let url;
     if (yearOrNext.toLowerCase() === 'next') {
@@ -30,7 +36,21 @@ async function getHoliday() {
         console.error('Error data:', error);
     }
 }
-
+async function isValidCountryCode(countryCode) {
+    try {
+        const response = await fetch(availableCountriesUrl);
+        if (!response.ok) {
+            throw new Error(`HTTP 오류! 상태 코드: ${response.status}`);
+        }
+        const countries = await response.json();
+        return countries.find(function(country) {
+            return country.countryCode.toLowerCase() === countryCode.toLowerCase();
+        });
+    } catch (error) {
+        console.error(error.message)
+        return false;
+    }
+}
 async function fetchHolidayData(url) {
     try {
         const response = await fetch(url);
