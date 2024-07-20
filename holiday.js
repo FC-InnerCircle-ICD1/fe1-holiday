@@ -28,6 +28,12 @@ const fetchNextHolidays = async (countryCode) => {
   return await result.json();
 };
 
+const fetchHolidays = async (countryCode, year) => {
+  return year === "next"
+    ? await fetchNextHolidays(countryCode)
+    : await fetchYearHolidays(countryCode, year);
+};
+
 const main = async () => {
   if (
     process.argv.length !== EXPECTED_ARGV_LENGTH ||
@@ -46,10 +52,7 @@ const main = async () => {
     return;
   }
 
-  const holidays =
-    year === "next"
-      ? await fetchNextHolidays(countryCode)
-      : await fetchYearHolidays(countryCode, year);
+  const holidays = await fetchHolidays(countryCode, year);
   holidays.forEach(({ date, name, localName }) => {
     console.log(date, name, localName);
   });
