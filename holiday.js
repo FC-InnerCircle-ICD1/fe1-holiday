@@ -14,6 +14,13 @@ const fetchYearHolidays = async (countryCode, year) => {
   return await result.json();
 };
 
+const fetchNextHolidays = async (countryCode) => {
+  const result = await fetch(
+    `${API_HOST}/api/v3/NextPublicHolidays/${countryCode}`
+  );
+  return await result.json();
+};
+
 const main = async () => {
   if (process.argv.length !== EXPECTED_ARGV_LENGTH) {
     console.error(
@@ -29,7 +36,10 @@ const main = async () => {
     return;
   }
 
-  const holidays = await fetchYearHolidays(countryCode, year);
+  const holidays =
+    year === "next"
+      ? await fetchNextHolidays(countryCode)
+      : await fetchYearHolidays(countryCode, year);
   holidays.forEach(({ date, name, localName }) => {
     console.log(date, name, localName);
   });
