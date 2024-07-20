@@ -7,6 +7,13 @@ const validateCountryCode = async (countryCode) => {
   return result.ok;
 };
 
+const fetchYearHolidays = async (countryCode, year) => {
+  const result = await fetch(
+    `${API_HOST}/api/v3/PublicHolidays/${year}/${countryCode}`
+  );
+  return await result.json();
+};
+
 const main = async () => {
   if (process.argv.length !== EXPECTED_ARGV_LENGTH) {
     console.error(
@@ -21,6 +28,11 @@ const main = async () => {
     console.error("Wrong country code");
     return;
   }
+
+  const holidays = await fetchYearHolidays(countryCode, year);
+  holidays.forEach(({ date, name, localName }) => {
+    console.log(date, name, localName);
+  });
 };
 
 main();
