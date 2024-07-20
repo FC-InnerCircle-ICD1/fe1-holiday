@@ -6,7 +6,7 @@ const [, , countryCodeInput, yearOrNext] = process.argv;
 const countryCode = countryCodeInput.toUpperCase();
 const year = parseInt(yearOrNext);
 
-const fetchHoliday = (_country, _year) => {
+const fetchHolidayYear = (_country, _year) => {
   return new Promise((resolve, reject) => {
     https
       .get(`${HOLIDAY_API_URL}/PublicHolidays/${_year}/${_country}`, (resp) => {
@@ -26,3 +26,16 @@ const fetchHoliday = (_country, _year) => {
       });
   });
 };
+
+const result = fetchHolidayYear(countryCode, year)
+  .then((holidays) => {
+    return holidays.map((holiday) => {
+      return [holiday.date, holiday.name, holiday.localName].join(" ");
+    });
+  })
+  .then((holidays) => {
+    console.log(holidays.join("\n"));
+  })
+  .catch((err) => {
+    console.error(err);
+  });
