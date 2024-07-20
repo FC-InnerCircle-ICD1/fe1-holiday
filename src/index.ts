@@ -16,6 +16,18 @@ const parseArgs = (
   return { countryCode, yearOrNext };
 };
 
+const outputHolidays = (
+  holidays: {
+    date: string;
+    localName: string;
+    name: string;
+  }[]
+) => {
+  holidays.forEach(({ date, localName, name }) =>
+    console.log(`${date} ${name} ${localName}`)
+  );
+};
+
 const main = async () => {
   const args = process.argv.slice(2);
 
@@ -26,8 +38,7 @@ const main = async () => {
       : yearOrNext;
 
   const holidays = await getHolidays(year, countryCode);
-
-  console.log(holidays);
+  outputHolidays(holidays);
 };
 
 main();
