@@ -266,17 +266,27 @@ function formatHoliday(holidays) {
   return holidayText;
 }
 
+function handleHolidayApiError(response) {
+  if (response.ok === false) {
+    if (response.status === 404) {
+      console.error('Wrong country code');
+      process.exit();
+    }
+
+    throw new Error(response.statusText);
+  }
+}
+
 async function searchHoliday(countryCode, year) {
   try {
     const response = await fetch(
       `${API_BASE_URL}/PublicHolidays/${year}/${countryCode}`
     );
 
-    if (response.ok === false) {
-      throw new Error('서버와 통신할 때 에러가 발생했습니다.');
-    }
+    handleHolidayApiError(response);
 
     const result = await response.json();
+
     return result;
   } catch (error) {
     console.error('error =', error);
@@ -289,9 +299,7 @@ async function searchNextHoliday(countryCode) {
       `${API_BASE_URL}/NextPublicHolidays/${countryCode}`
     );
 
-    if (response.ok === false) {
-      throw new Error('서버와 통신할 때 에러가 발생했습니다.');
-    }
+    handleHolidayApiError(response);
 
     const result = await response.json();
     return result;
