@@ -1,12 +1,17 @@
-const BASE_URL = 'https://date.nager.at/api/v3';
+import { ERROR } from '../contant/error.js';
+import { BASE_URL } from '../contant/url.js';
 
 const getHolidays = async ({ countryCode, year }) => {
   const response = await fetch(
     `${BASE_URL}/PublicHolidays/${year}/${countryCode}`
   );
 
-  if (!response.ok) {
-    throw new Error(response.statusText);
+  if (response.status === 400) {
+    throw new Error(ERROR.INVALID_REQUEST);
+  }
+
+  if (response.status === 404) {
+    throw new Error(ERROR.INVALID_COUNTRY_CODE);
   }
 
   return response.json();
@@ -15,8 +20,8 @@ const getHolidays = async ({ countryCode, year }) => {
 const getNextHolidays = async ({ countryCode }) => {
   const response = await fetch(`${BASE_URL}/NextPublicHolidays/${countryCode}`);
 
-  if (!response.ok) {
-    throw new Error(response.statusText);
+  if (response.status === 400) {
+    throw new Error(ERROR.INVALID_REQUEST);
   }
 
   return response.json();
