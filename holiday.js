@@ -28,9 +28,10 @@ const printHolidays = (holidays) => {
 };
 
 const getPublicHolidays = async (countryCode, yearOrNext) => {
-  countryCodeValidation(countryCode);
+  const uppercaseCountryCode = countryCode.toUpperCase();
+  countryCodeValidation(uppercaseCountryCode);
   if (yearOrNext.toLowerCase() === "next") {
-    const url = `${API_URL}/NextPublicHolidays/${countryCode}`;
+    const url = `${API_URL}/NextPublicHolidays/${uppercaseCountryCode}`;
     const response = await fetch(url);
     if (response.ok) {
       const data = await response.json();
@@ -39,7 +40,7 @@ const getPublicHolidays = async (countryCode, yearOrNext) => {
       console.error(`Error: ${response.title}`);
     }
   } else {
-    const url = `${API_URL}/PublicHolidays/${yearOrNext}/${countryCode}`;
+    const url = `${API_URL}/PublicHolidays/${yearOrNext}/${uppercaseCountryCode}`;
     const response = await fetch(url);
     if (response.ok) {
       const data = await response.json();
