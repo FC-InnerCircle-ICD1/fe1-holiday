@@ -32,7 +32,7 @@ const filterFutureHolidays = (holidays, fromDate) => {
 const getHolidays = async (country, yearOrNext) => {
   return yearOrNext === 'next'
     ? await fetchNextHolidays(country)
-    : await fetchHolidays(country, year);
+    : await fetchHolidays(country, yearOrNext);
 };
 
 // 메인 함수
