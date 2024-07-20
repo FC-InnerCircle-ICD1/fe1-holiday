@@ -5,6 +5,12 @@ const BASE_URL = 'https://date.nager.at/api/v3';
 
 // argument 검증 체크
 const validateArgs = () => {
+  if (!countryCode && !yearOrNext) {
+    console.error(
+      'Error: Country code is missing.\nUsage: node holiday.js <CountryCode> and <Year_or_Next>',
+    );
+  }
+
   if (!countryCode) {
     console.error(
       'Error: Country code is missing.\nUsage: node holiday.js <CountryCode> <Year_or_Next>',
@@ -43,7 +49,7 @@ const getAvailableCountries = async () => {
   }
 };
 
-const checkToAvailable = async () => {
+const checkToAvailableCountries = async () => {
   const countriesCode = await getAvailableCountries();
 
   if (!countriesCode.includes(countryCode)) {
@@ -61,13 +67,22 @@ const getNextTodayHolidays = async (countryCode) => {
 
   try {
     const response = await fetch(url);
+
     if (!response.ok) {
-      throw new Error('HTTP error');
+      switch (response.status) {
+        case 400:
+          throw new Error(`Validation failure`);
+        case 404:
+          throw new Error(`CountryCode is unknown: ${countryCode}`);
+        default:
+          throw new Error(`HTTP error: ${response.statusText}`);
+      }
     }
+
     const result = await response.json();
     return result;
   } catch (error) {
-    console.error('Error fetching next data:', error);
+    throw new Error(`HTTP error ${error}`);
   }
 };
 
@@ -76,13 +91,22 @@ const getHolidays = async (countryCode, year) => {
 
   try {
     const response = await fetch(url);
+
     if (!response.ok) {
-      throw new Error(`Error fetching holidays: ${response.statusText}`);
+      switch (response.status) {
+        case 400:
+          throw new Error(`Validation failure`);
+        case 404:
+          throw new Error(`CountryCode is unknown: ${countryCode}`);
+        default:
+          throw new Error(`HTTP error: ${response.statusText}`);
+      }
     }
+
     const holidays = await response.json();
     return holidays;
   } catch (error) {
-    throw new Error(`Error fetching holidays: ${error}`);
+    throw new Error(`HTTP error ${error}`);
   }
 };
 
@@ -93,8 +117,8 @@ const displayHolidays = (holidays) => {
 };
 
 const main = async () => {
-  await checkToAvailable();
   validateArgs();
+  await checkToAvailableCountries();
 
   if (yearOrNext.toLowerCase() === 'next') {
     const holidays = await getNextTodayHolidays(countryCode);
@@ -102,8 +126,7 @@ const main = async () => {
   } else {
     const year = parseInt(yearOrNext, 10);
     if (isNaN(year)) {
-      console.log("Year should be a number or 'next'");
-      process.exit(1);
+      throw new Error("Year should be a number or 'next'");
     }
     const holidays = await getHolidays(countryCode, year);
     displayHolidays(holidays);
