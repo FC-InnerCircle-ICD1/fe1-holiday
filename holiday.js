@@ -20,23 +20,27 @@ const printHolidays = (holidays) => {
   });
 };
 
+const filterFutureHolidays = (holidays, fromDate) => {
+  return holidays.filter((holiday) => new Date(holiday.date) >= fromDate);
+};
+
+const getHolidays = async (country, yearOrNext) => {
+  const today = new Date();
+  const year = yearOrNext === 'next' ? today.getFullYear() : yearOrNext;
+  let holidays = await fetchHolidays(country, year);
+
+  return yearOrNext === 'next'
+    ? filterFutureHolidays(holidays, today)
+    : holidays;
+};
+
 // 메인 함수
 const main = async (country, yearOrNext) => {
   try {
-    const today = new Date();
-    const thisYear = today.getFullYear();
-
-    let holidays;
-    if (yearOrNext === 'next') {
-      holidays = await fetchHolidays(country, thisYear);
-      holidays = holidays.filter((holiday) => new Date(holiday.date) >= today);
-    } else {
-      holidays = await fetchHolidays(country, yearOrNext);
-    }
-
+    const holidays = await getHolidays(country, yearOrNext);
     printHolidays(holidays);
   } catch (error) {
-    console.error('Error fetching holidays:', error);
+    console.error('Error fetching holidays:', error.message);
   }
 };
 
