@@ -75,7 +75,7 @@ const checkCountryCode = async (countryCode) => {
   }
 };
 
-const handleHolidaysError = (error) => {
+const handleGetHolidaysError = (error) => {
   if (isHTTPError(error)) {
     if (error.code === 400) {
       console.error("Validation Failure");
@@ -83,8 +83,9 @@ const handleHolidaysError = (error) => {
     if (error.code === 404) {
       console.error(`Wrong country code`);
     }
+  } else {
+    console.error(error.message);
   }
-  return;
 };
 
 (async function () {
@@ -110,7 +111,7 @@ const handleHolidaysError = (error) => {
     console.log(result.join("\n"));
     process.exit(0);
   } catch (error) {
-    handleHolidaysError(error);
+    handleGetHolidaysError(error);
     process.exit(1);
   }
 })();
