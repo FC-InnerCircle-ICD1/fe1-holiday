@@ -1,0 +1,17 @@
+{
+  "name": "kimkichul",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "ts-node holiday.ts"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@types/node": "^20.14.11",
+    "ts-node": "^6.0.1",
+    "typescript": "^5.5.3"
+  }
+}

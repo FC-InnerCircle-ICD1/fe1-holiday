@@ -1,0 +1,10 @@
+// process.argv 배열을 통해 명령줄 인수를 가져옵니다.
+const args = process.argv.slice(2); // 첫 두 개의 요소를 제외한 나머지 요소들을 가져옵니다.
+
+// 명령줄 인수들을 변수에 할당합니다.
+const country = args[0];
+const year = args[1];
+
+// 결과를 콘솔에 출력합니다.
+console.log(`Country: ${country}`);
+console.log(`Year: ${year}`);
