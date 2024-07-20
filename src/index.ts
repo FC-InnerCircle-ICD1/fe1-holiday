@@ -3,6 +3,9 @@
 //연도가 next일때 다음 년도로 바꿔주기
 //연도가 유효한 형식이 아닐 경우
 
+import { getHolidays } from "./api";
+import { getCurrentYear } from "./utils";
+
 const parseArgs = (
   args: string[]
 ): { countryCode: string; yearOrNext: string } => {
@@ -13,10 +16,18 @@ const parseArgs = (
   return { countryCode, yearOrNext };
 };
 
-const main = () => {
+const main = async () => {
   const args = process.argv.slice(2);
 
   const { countryCode, yearOrNext } = parseArgs(args);
+  const year =
+    yearOrNext.toLowerCase() === "next"
+      ? (parseInt(getCurrentYear()) + 1).toString()
+      : yearOrNext;
+
+  const holidays = await getHolidays(year, countryCode);
+
+  console.log(holidays);
 };
 
 main();
