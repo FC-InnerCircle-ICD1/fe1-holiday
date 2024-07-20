@@ -21,7 +21,7 @@ const countryCodeValidation = async (countryCode) => {
   }
 };
 
-const print = (holidays) => {
+const printHolidays = (holidays) => {
   holidays.forEach((v) => {
     console.log(`${v.date} ${v.localName} ${v.name}`);
   });
@@ -34,15 +34,18 @@ const getPublicHolidays = async (countryCode, yearOrNext) => {
     const response = await fetch(url);
     if (response.ok) {
       const data = await response.json();
-      console.log(data);
-      print(data);
+      printHolidays(data);
+    } else {
+      console.error(`Error: ${response.title}`);
     }
   } else {
     const url = `${API_URL}/PublicHolidays/${yearOrNext}/${countryCode}`;
     const response = await fetch(url);
     if (response.ok) {
       const data = await response.json();
-      print(data);
+      printHolidays(data);
+    } else {
+      console.error(`Error: ${response.title}`);
     }
   }
 };
