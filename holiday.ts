@@ -48,7 +48,7 @@ const getYearsHoliday = async (year: string | number, country: string) => {
 
 const printHolidays = (holidays: Holiday[]) => {
   holidays.forEach((holiday) => {
-    console.log(`${holiday.date} ${holiday.localName} ${holiday.name}`);
+    console.log(`${holiday.date} ${holiday.name} ${holiday.localName}`);
   });
 };
 
