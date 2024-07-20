@@ -1,8 +1,8 @@
 const HOLIDAY_API_URL = "https://date.nager.at/api/v3";
 const [, , countryCodeInput, yearOrNext] = process.argv;
 
-const request = (url) => {
-  const res = fetch(url);
+const request = async (url) => {
+  const res = await fetch(url);
 
   if (!res.ok) {
     throw new Error(`HTTP error! status: ${res.status}, ${res.json()}`);
@@ -53,6 +53,7 @@ const fetchNextPublicHoliday = async (_country) => {
 };
 
 const checkAvailableCountriesCode = async (countryCode) => {
+  console.log("a");
   try {
     const availableCountries = await fetchAvailableCountries();
     const availableCountryCodes = availableCountries.map(
@@ -71,7 +72,7 @@ const checkAvailableCountriesCode = async (countryCode) => {
 
 (async function () {
   checkInputValues(countryCodeInput, yearOrNext);
-  checkAvailableCountriesCode(countryCodeInput);
+  // checkAvailableCountriesCode(countryCodeInput);
 
   const { isNext, year } = extractYearOrNext(yearOrNext);
   const countryCode = countryCodeInput.toUpperCase();
