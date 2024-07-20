@@ -4,13 +4,6 @@ export const getCurrentYear = (): string => {
   return new Date().getFullYear().toString();
 };
 
-export const parseArgs = (
-  args: string[]
-): { countryCode: string; yearOrNext: string } => {
-  const [countryCode, yearOrNext] = args;
-  return { countryCode, yearOrNext };
-};
-
 export const isValidYear = (year: string): boolean => {
   const yearNumber = parseInt(year, 10);
 
@@ -27,7 +20,7 @@ export const validateCountry = async (countryCode: string) => {
   return countryCodes.includes(countryCode);
 };
 
-export const validateArgs = async (args: string[]) => {
+export const parseArgs = async (args: string[]) => {
   if (args.length !== 2) {
     throw new Error("Usage: node holiday.js <countryCode> <year_or_next>");
   }
@@ -38,5 +31,5 @@ export const validateArgs = async (args: string[]) => {
   if (!isValidYear(yearOrNext) && yearOrNext !== "next")
     throw new Error("Check : year_or_next");
 
-  return true;
+  return { countryCode, yearOrNext };
 };

@@ -16,10 +16,7 @@ const outputHolidays = (holidays) => {
 };
 const main = () => __awaiter(void 0, void 0, void 0, function* () {
     const args = process.argv.slice(2);
-    const isValidate = yield (0, utils_1.validateArgs)(args);
-    if (!isValidate)
-        process.exit();
-    const { countryCode, yearOrNext } = (0, utils_1.parseArgs)(args);
+    const { countryCode, yearOrNext } = yield (0, utils_1.parseArgs)(args);
     const year = yearOrNext.toLowerCase() === "next"
         ? (parseInt((0, utils_1.getCurrentYear)()) + 1).toString()
         : yearOrNext;
