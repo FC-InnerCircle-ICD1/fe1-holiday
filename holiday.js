@@ -50,11 +50,6 @@ const fetchHolidayYear = async (country, year) => {
   return requestJsonFromUrl(fetchUrl);
 };
 
-const fetchAvailableCountries = async () => {
-  const fetchUrl = `${HOLIDAY_API_URL}/AvailableCountries`;
-  return requestJsonFromUrl(fetchUrl);
-};
-
 const fetchNextPublicHoliday = async (country) => {
   const fetchUrl = `${HOLIDAY_API_URL}/NextPublicHolidays/${country}`;
   return requestJsonFromUrl(fetchUrl);
@@ -83,8 +78,7 @@ const handleHolidaysError = (error) => {
       : await fetchHolidayYear(countryCode, year);
 
     if (holidays.length === 0) {
-      console.log(`No holidays found for ${countryCode} in ${year}`);
-      process.exit(0);
+      throw new Error("No holidays found");
     }
 
     const result = holidays
