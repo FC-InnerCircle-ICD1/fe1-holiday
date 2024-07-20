@@ -35,19 +35,17 @@ async function fetchHolidays() {
             })
         } else if (!isNaN(option)) {
             data = await getPublicHolidays(option, countryCode);
-            if (typeof data === 'string') {
-                console.log(data)
-            } else {
-                data.map((item) => {
-                    console.log(`${item.date} ${item.eName} ${item.localName}`)
-                })
-            }
+            data.map((item) => {
+                console.log(`${item.date} ${item.eName} ${item.localName}`)
+            })
+
 
         } else {
             throw new Error("두번째 파라미터에 존재하지 않는 명령어가 입력되었습니다.")
         }
         // console.log('Public Holidays:', data);
     } catch (error) {
+
         console.error(error);
     }
 }
