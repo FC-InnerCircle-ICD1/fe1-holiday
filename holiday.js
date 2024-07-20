@@ -21,7 +21,10 @@ const extractYearOrNext = (yearOrNext) => {
     String(yearOrNext).toLocaleLowerCase() === "next";
   const year = isNext ? new Date().getFullYear() : parseInt(yearOrNext);
 
-  return year;
+  return {
+    isNext,
+    year,
+  };
 };
 
 const fetchHolidayYear = async (_country, _year) => {
@@ -67,7 +70,7 @@ const checkAvailableCountriesCode = async (countryCode) => {
   checkInputValues(countryCodeInput, yearOrNext);
   checkAvailableCountriesCode(countryCodeInput);
 
-  const year = extractYearOrNext(yearOrNext);
+  const { isNext, year } = extractYearOrNext(yearOrNext);
   const countryCode = countryCodeInput.toUpperCase();
   const TODAY = new Date();
 
@@ -81,9 +84,12 @@ const checkAvailableCountriesCode = async (countryCode) => {
 
     const result = holidays
       .map((holiday) => {
-        if (new Date(holiday.date).getTime() <= TODAY.getTime()) {
-          return null;
+        if (isNext) {
+          if (new Date(holiday.date).getTime() <= TODAY.getTime()) {
+            return null;
+          }
         }
+
         return [holiday.date, holiday.name, holiday.localName].join(" ");
       })
       .filter((holiday) => holiday !== null);
