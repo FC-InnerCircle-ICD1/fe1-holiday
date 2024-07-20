@@ -24,10 +24,10 @@ fetch(`https://date.nager.at/api/v3/PublicHolidays/${year}/${countryCode}`)
             if(nextYn) {
                 const holidayDate = new Date(holiday.date);
                 if (holidayDate > today) {
-                    console.log(holiday.name);
+                    console.log(holiday.date ,' ',holiday.name ,' ',holiday.localName);
                 }
             } else 
-                console.log(holiday.name);
+                console.log(holiday.date ,' ',holiday.name ,' ',holiday.localName);
         });
     })
     .catch(error => {
