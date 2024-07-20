@@ -1,5 +1,3 @@
-const https = require("https");
-
 // 함수 정의: year와 countryCode를 받아서 API 호출
 const getPublicHolidays = async (year, countryCode) => {
   let y = year === "next" ? new Date().getFullYear() : year;
@@ -39,7 +37,7 @@ const getPublicHolidays = async (year, countryCode) => {
 
     if (!response.ok) {
       if (response.status === 400) {
-        return console.error("Validation failure");
+        return console.error("Error: Validation failure");
       }
 
       if (response.status === 404) {
