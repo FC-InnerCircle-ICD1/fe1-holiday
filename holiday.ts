@@ -33,7 +33,6 @@ const getYearsHoliday = async (year: string | number, country: string) => {
     return holidays;
   } catch (error) {
     console.error(error);
-  } finally {
     return [];
   }
 };
