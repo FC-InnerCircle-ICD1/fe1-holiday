@@ -64,17 +64,21 @@ function getPublicHolidays(year, countryCode) {
     // Validation failure
     // 유효성 검증 실패
     if (res.statusCode === 400) {
-      return console.error("Validation failure");
+      console.error("Validation failure");
+      process.exit(1);
     }
 
     // CountryCode is unknown
     // 국가코드 미존재로 인한 에러
     if (res.statusCode === 404) {
-      return console.error("Error: 존재하지 않는 국가코드입니다.");
+      console.error("Error: 존재하지 않는 국가코드입니다.");
+      process.exit(1);
     }
   });
+
+  //   소통함수 실행
   req.end();
-}
+};
 
 // Node.js 명령어 인수를 받아서 함수 호출
 const args = process.argv.slice(2);
