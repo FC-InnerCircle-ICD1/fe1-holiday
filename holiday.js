@@ -1,19 +1,11 @@
 const https = require("https");
 
 // 함수 정의: year와 countryCode를 받아서 API 호출
-const getPublicHolidays = (year, countryCode) => {
-  let y = year == "next" ? new Date().getFullYear() : year;
+const getPublicHolidays = async (year, countryCode) => {
+  let y = year === "next" ? new Date().getFullYear() : year;
   const c = countryCode;
 
-  /**
-   * @desc api option
-   */
-  const options = {
-    hostname: "date.nager.at",
-    port: 443,
-    path: `/api/v3/publicholidays/${y}/${c}`,
-    method: "GET",
-  };
+  const url = `https://date.nager.at/api/v3/publicholidays/${y}/${c}`;
 
   /**
    * @desc holiday 반환처리
@@ -22,7 +14,7 @@ const getPublicHolidays = (year, countryCode) => {
    * @returns
    */
   const returnHolidays = (data, today) => {
-    return data.forEach((holiday) => {
+    data.forEach((holiday) => {
       const { date, name, localName } = holiday;
       const holidayDate = new Date(date);
 
@@ -35,50 +27,34 @@ const getPublicHolidays = (year, countryCode) => {
     });
   };
 
-  /**
-   * @desc api 소통함수
-   */
-  const req = https.request(options, (res) => {
-    // 상태코드 200일 경우.
-    if (res.statusCode === 200) {
-      let data = [];
+  try {
+    const response = await fetch(url);
+    if (response.ok) {
+      const holidays = await response.json();
+      const today = new Date();
 
-      // 데이터가 들어올 때마다 호출됨
-      res.on("data", (chunk) => {
-        data += chunk;
-      });
-
-      // 응답이 완료되었을 때 호출됨
-      res.on("end", async () => {
-        try {
-          const holidays = JSON.parse(data);
-          const today = new Date();
-
-          // 반환
-          return returnHolidays(holidays, today);
-        } catch (error) {
-          console.error("Error parsing JSON:", error);
-        }
-      });
+      // 반환
+      return returnHolidays(holidays, today);
     }
 
-    // Validation failure
-    // 유효성 검증 실패
-    if (res.statusCode === 400) {
-      console.error("Validation failure");
-      process.exit(1);
-    }
+    if (!response.ok) {
+      if (response.status === 400) {
+        console.error("Validation failure");
+        process.exit(1);
+      }
 
-    // CountryCode is unknown
-    // 국가코드 미존재로 인한 에러
-    if (res.statusCode === 404) {
-      console.error("Error: 존재하지 않는 국가코드입니다.");
-      process.exit(1);
+      if (response.status === 404) {
+        console.error("Error: 존재하지 않는 국가코드입니다.");
+        process.exit(1);
+      } else {
+        console.error(`Error: ${response.statusText}`);
+        process.exit(1);
+      }
     }
-  });
-
-  // api 실행
-  req.end();
+  } catch (error) {
+    console.error("Error fetching data:", error);
+    process.exit(1);
+  }
 };
 
 // Node.js 명령어 인수를 받아서 함수 호출
