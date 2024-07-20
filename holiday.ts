@@ -18,6 +18,12 @@ type Holiday = {
 };
 
 const HOLIDAY_API = "https://date.nager.at/api/v3/publicholidays";
+
+const printAllYearsHoliday = async (year: string, country: string) => {
+  const holidays = await getYearsHoliday(year, country);
+
+  printHolidays(holidays);
+};
 const getYearsHoliday = async (year: string | number, country: string) => {
   const res = await fetch(HOLIDAY_API + `/${year}/${country}`);
   const holidays = (await res.json()) as Holiday[];
