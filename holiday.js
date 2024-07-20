@@ -21,6 +21,22 @@ async function main() {
   }
 }
 
+async function fetchingData(url) {
+  try {
+    const response = await fetch(url);
+
+    if (!response.ok) {
+      const errorData = await response.json();
+      throw new Error(`${response.status} ${response.statusText}: ${JSON.stringify(errorData)}`);
+    }
+
+    return await response.json();
+  } catch (error) {
+    console.error("Error fetching data:", error.message);
+  }
+}
+
+
 async function validateArgs() {
   const args = process.argv.slice(2);
   const countryCode = args[0];
@@ -40,43 +56,20 @@ async function validateArgs() {
 }
 
 async function isAvailableCountry(countryCode) {
-  try {
-    const response = await fetch(`${availableCountriesUrl}`);
-    if (!response.ok) {
-      throw new Error('HTTP error');
-    }
-    const countries = await response.json();
-    const isAvailableCountry = countries.some(country => country.countryCode.toLowerCase() === countryCode.toLowerCase());
-    return isAvailableCountry
-  } catch (error) {
-    console.error('Error fetching holiday data:', error);
-  }
+  const countries = await getAvailableCountries()
+  return countries.some(country => country.countryCode.toLowerCase() === countryCode.toLowerCase());
+}
+
+async function getAvailableCountries() {
+  return await fetchingData(`${availableCountriesUrl}`)
 }
 
 async function getHolidayByYear(countryCode, yearOrNext) {
-  try {
-    const response = await fetch(`${holidayApiUrlByYear}/${yearOrNext}/${countryCode}`);
-    if (!response.ok) {
-      throw new Error('HTTP error');
-    }
-    const result = await response.json();
-    return result;
-  } catch (error) {
-    console.error('Error fetching holiday data:', error);
-  }
+  return await fetchingData(`${holidayApiUrlByYear}/${yearOrNext}/${countryCode}`)
 }
 
 async function getUpcomingHoliday(countryCode) {
-  try {
-    const response = await fetch(`${upcomingHolidayApiUrl}/${countryCode}`);
-    if (!response.ok) {
-      throw new Error('HTTP error');
-    }
-    const result = await response.json();
-    return result;
-  } catch (error) {
-    console.error('Error fetching holiday data:', error);
-  }
+  return await fetchingData(`${upcomingHolidayApiUrl}/${countryCode}`)
 }
 
 function printHolidayData(holidayData) {
