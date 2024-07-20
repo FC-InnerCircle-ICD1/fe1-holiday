@@ -31,17 +31,10 @@ const getNextHolidaysApi = async () => {
 const printDay = (day) =>
   console.log(`${day.date} ${day.name} ${day.localName}`);
 
-const printHolidays = async () => {
-  const holidays = await getHolidaysApi();
+const main = async () => {
+  const holidays =
+    year === "next" ? await getNextHolidaysApi() : await getHolidaysApi();
   holidays.forEach(printDay);
-};
-const printNextHolidays = async () => {
-  const holidays = await getNextHolidaysApi();
-  holidays.forEach(printDay);
-};
-
-const main = () => {
-  year === "next" ? printNextHolidays() : printHolidays();
 };
 
 main(countryCode, year);
