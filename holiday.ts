@@ -12,30 +12,29 @@ type Holiday = {
 
 const HOLIDAY_API = "https://date.nager.at/api/v3";
 
-const getYearsHoliday = async (year: string | number, country: string) => {
-  const res = await fetch(HOLIDAY_API + `/publicholidays/${year}/${country}`);
+const getYearsHoliday = async (year: string, country: string) => {
+  try {
+    const res = await fetch(`${HOLIDAY_API}/publicholidays/${year}/${country}`);
+    const holidays = (await res.json()) as Holiday[];
 
-  if (res.status === 404 || res.status === 400) {
-    console.log("입력형식은 국가코드 2자리, 연도 4자리입니다.");
+    return holidays;
+  } catch (e) {
+    console.log("에러 발생");
+    console.error(e);
     return [];
   }
-
-  const holidays = (await res.json()) as Holiday[];
-  return holidays;
 };
 
 const getNextHoliday = async (country: string) => {
-  const res = await fetch(HOLIDAY_API + `/NextPublicHolidays/${country}`);
-
-  console.log(res.status);
-
-  if (res.status === 204) {
-    console.log("입력형식은 국가코드 2자리입니다.");
+  try {
+    const res = await fetch(`${HOLIDAY_API}/NextPublicHolidays/${country}`);
+    const holidays = (await res.json()) as Holiday[];
+    return holidays;
+  } catch (e) {
+    console.log("에러 발생");
+    console.error(e);
     return [];
   }
-
-  const holidays = (await res.json()) as Holiday[];
-  return holidays;
 };
 
 const printHolidays = (holidays: Holiday[]) => {
@@ -45,13 +44,8 @@ const printHolidays = (holidays: Holiday[]) => {
 };
 
 const printAllYearsHoliday = async (year: string, country: string) => {
-  try {
-    const holidays = await getYearsHoliday(year, country);
-    printHolidays(holidays);
-  } catch (e) {
-    console.log("에러 발생");
-    console.error(e);
-  }
+  const holidays = await getYearsHoliday(year, country);
+  printHolidays(holidays);
 };
 
 const printYearsNextHoliday = async (country: string) => {
@@ -98,11 +92,11 @@ const main = async () => {
 
   await validateCountry(country);
 
-if (year === "next") {
-  printYearsNextHoliday(country);
-} else {
-  printAllYearsHoliday(year, country);
-}
+  if (year === "next") {
+    printYearsNextHoliday(country);
+  } else {
+    printAllYearsHoliday(year, country);
+  }
 };
 
 main();
