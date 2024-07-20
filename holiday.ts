@@ -17,24 +17,32 @@ type Holiday = {
   types: string[];
 };
 
-const HOLIDAY_API = "https://date.nager.at/api/v3/publicholidays";
+const HOLIDAY_API = "https://date.nager.at/api/v3";
 
 const getYearsHoliday = async (year: string | number, country: string) => {
-  try {
-    const res = await fetch(HOLIDAY_API + `/${year}/${country}`);
-    const holidays = (await res.json()) as Holiday[];
+  const res = await fetch(HOLIDAY_API + `/publicholidays/${year}/${country}`);
 
-    if (!res.ok) {
-      console.log("입력형식은 국가코드 2자리, 연도 4자리입니다.");
-
-      return [];
-    }
-
-    return holidays;
-  } catch (error) {
-    console.error(error);
+  if (res.status === 404 || res.status === 400) {
+    console.log("입력형식은 국가코드 2자리, 연도 4자리입니다.");
     return [];
   }
+
+  const holidays = (await res.json()) as Holiday[];
+  return holidays;
+};
+
+const getNextHoliday = async (country: string) => {
+  const res = await fetch(HOLIDAY_API + `/NextPublicHolidays/${country}`);
+
+  console.log(res.status);
+
+  if (res.status === 204) {
+    console.log("입력형식은 국가코드 2자리입니다.");
+    return [];
+  }
+
+  const holidays = (await res.json()) as Holiday[];
+  return holidays;
 };
 
 const printHolidays = (holidays: Holiday[]) => {
@@ -44,23 +52,24 @@ const printHolidays = (holidays: Holiday[]) => {
 };
 
 const printAllYearsHoliday = async (year: string, country: string) => {
-  const holidays = await getYearsHoliday(year, country);
-
-  printHolidays(holidays);
+  try {
+    const holidays = await getYearsHoliday(year, country);
+    printHolidays(holidays);
+  } catch (e) {
+    console.log("에러 발생");
+    console.error(e);
+  }
 };
 
 const printYearsNextHoliday = async (country: string) => {
-  const year = new Date().getFullYear();
-  const today = new Date();
+  try {
+    const nextHoliday = await getNextHoliday(country);
 
-  const holidays = await getYearsHoliday(year, country);
-
-  const nextHoliday = holidays.filter((holiday) => {
-    const holidayDate = new Date(holiday.date);
-    return holidayDate > today;
-  });
-
-  printHolidays(nextHoliday);
+    printHolidays(nextHoliday);
+  } catch (e) {
+    console.log("에러 발생");
+    console.error(e);
+  }
 };
 
 if (year === "next") {
