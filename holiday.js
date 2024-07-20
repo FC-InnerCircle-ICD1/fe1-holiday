@@ -13,7 +13,30 @@ function getPublicHolidays(year, countryCode) {
     method: "GET",
   };
 
-  // 요청 생성
+  /**
+   * @desc holiday 반환처리
+   * @param {*} data
+   * @param {*} today
+   * @returns
+   */
+  const returnHolidays = (data, today) => {
+    return data.forEach((holiday) => {
+      const { date, name, localName } = holiday;
+      const holidayDate = new Date(date);
+
+      // year가 next인 경우, 오늘 이후의 공휴일만 출력
+      if (year === "next" && holidayDate > today) {
+        console.log(`${date} ${name} ${localName}`);
+      } else if (year !== "next") {
+        console.log(`${date} ${name} ${localName}`);
+      }
+    });
+    //  양식에 맞는 배열처리
+  };
+
+  /**
+   * @desc api 소통함수
+   */
   const req = https.request(options, (res) => {
     // 상태코드 200일 경우.
     if (res.statusCode === 200) {
@@ -25,24 +48,13 @@ function getPublicHolidays(year, countryCode) {
       });
 
       // 응답이 완료되었을 때 호출됨
-      res.on("end", () => {
+      res.on("end", async () => {
         try {
           const holidays = JSON.parse(data);
           // 오늘 이후 날짜를 구합니다.
           const today = new Date();
-
-          //  양식에 맞는 배열처리
-          holidays.forEach((holiday) => {
-            const { date, name, localName } = holiday;
-            const holidayDate = new Date(date);
-
-            // year가 next인 경우, 오늘 이후의 공휴일만 출력
-            if (year === "next" && holidayDate > today) {
-              console.log(`${date} ${name} ${localName}`);
-            } else if (year !== "next") {
-              console.log(`${date} ${name} ${localName}`);
-            }
-          });
+          // 반환
+          return returnHolidays(holidays, today);
         } catch (error) {
           console.error("Error parsing JSON:", error);
         }
