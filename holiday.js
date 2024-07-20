@@ -1,12 +1,20 @@
 const HOLIDAY_API_URL = "https://date.nager.at/api/v3";
 const [, , countryCodeInput, yearOrNext] = process.argv;
 
-const request = async (url) => {
+class HTTPError extends Error {
+  constructor(response) {
+    super(`HTTP error! status: ${response.status}`);
+    this.code = response.status;
+    this.response = response;
+  }
+}
+
+const fetchClient = async (url) => {
   const res = await fetch(url);
   const json = await res.json();
 
   if (!res.ok) {
-    throw new Error(`HTTP error! status: ${res.status}`);
+    throw new HTTPError(res);
   }
 
   return json;
@@ -40,21 +48,20 @@ const extractYearOrNext = (yearOrNext) => {
 
 const fetchHolidayYear = async (_country, _year) => {
   const fetchUrl = `${HOLIDAY_API_URL}/PublicHolidays/${_year}/${_country}`;
-  return request(fetchUrl);
+  return fetchClient(fetchUrl);
 };
 
 const fetchAvailableCountries = async () => {
   const fetchUrl = `${HOLIDAY_API_URL}/AvailableCountries`;
-  return request(fetchUrl);
+  return fetchClient(fetchUrl);
 };
 
 const fetchNextPublicHoliday = async (_country) => {
   const fetchUrl = `${HOLIDAY_API_URL}/NextPublicHolidays/${_country}`;
-  return request(fetchUrl);
+  return fetchClient(fetchUrl);
 };
 
 const checkAvailableCountriesCode = async (countryCode) => {
-  console.log("a");
   try {
     const availableCountries = await fetchAvailableCountries();
     const availableCountryCodes = availableCountries.map(
@@ -69,6 +76,18 @@ const checkAvailableCountriesCode = async (countryCode) => {
     console.error("Wrong country code");
     process.exit(1);
   }
+};
+
+const handleHolidaysError = (error) => {
+  if (error instanceof HTTPError) {
+    if (error.code === 400) {
+      console.error("Validation Failure");
+    }
+    if (error.code === 404) {
+      console.error(`CountryCode is unknown `);
+    }
+  }
+  return;
 };
 
 (async function () {
@@ -96,7 +115,7 @@ const checkAvailableCountriesCode = async (countryCode) => {
 
     console.log(result.join("\n"));
   } catch (error) {
-    console.error(error, "Error fetching holidays");
+    handleHolidaysError(error);
   } finally {
     process.exit(0);
   }
