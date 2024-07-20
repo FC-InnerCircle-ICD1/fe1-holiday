@@ -9,9 +9,9 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.checkAvailableCountries = exports.getHolidays = void 0;
+exports.getHolidayByNext = exports.checkAvailableCountries = exports.getHolidaysByYear = void 0;
 const BASE_URL = "https://date.nager.at/api/v3";
-const getHolidays = (year, countryCode) => __awaiter(void 0, void 0, void 0, function* () {
+const getHolidaysByYear = (year, countryCode) => __awaiter(void 0, void 0, void 0, function* () {
     const url = `${BASE_URL}/publicholidays/${year}/${countryCode}`;
     try {
         const response = yield fetch(url);
@@ -31,7 +31,7 @@ const getHolidays = (year, countryCode) => __awaiter(void 0, void 0, void 0, fun
         throw error;
     }
 });
-exports.getHolidays = getHolidays;
+exports.getHolidaysByYear = getHolidaysByYear;
 const checkAvailableCountries = () => __awaiter(void 0, void 0, void 0, function* () {
     const url = `${BASE_URL}/AvailableCountries`;
     try {
@@ -48,3 +48,19 @@ const checkAvailableCountries = () => __awaiter(void 0, void 0, void 0, function
     }
 });
 exports.checkAvailableCountries = checkAvailableCountries;
+const getHolidayByNext = (countryCode) => __awaiter(void 0, void 0, void 0, function* () {
+    const url = `${BASE_URL}/NextPublicHolidays/${countryCode}`;
+    try {
+        const response = yield fetch(url);
+        if (!response.ok) {
+            throw new Error(`Error fetching countries:${response.status} ${response.statusText}`);
+        }
+        const holidays = yield response.json();
+        return holidays;
+    }
+    catch (error) {
+        console.error("Error fetching countries:", error);
+        throw error;
+    }
+});
+exports.getHolidayByNext = getHolidayByNext;

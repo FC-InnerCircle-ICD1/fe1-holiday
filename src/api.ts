@@ -12,7 +12,7 @@ export type Country = {
   countryCode: string;
   name: string;
 };
-export const getHolidays = async (
+export const getHolidaysByYear = async (
   year: string,
   countryCode: string
 ): Promise<Holiday[]> => {
@@ -51,6 +51,26 @@ export const checkAvailableCountries = async (): Promise<Country[]> => {
     }
     const countries = await response.json();
     return countries;
+  } catch (error) {
+    console.error("Error fetching countries:", error);
+    throw error;
+  }
+};
+
+export const getHolidayByNext = async (
+  countryCode: string
+): Promise<Holiday[]> => {
+  const url = `${BASE_URL}/NextPublicHolidays/${countryCode}`;
+  try {
+    const response = await fetch(url);
+
+    if (!response.ok) {
+      throw new Error(
+        `Error fetching countries:${response.status} ${response.statusText}`
+      );
+    }
+    const holidays = await response.json();
+    return holidays;
   } catch (error) {
     console.error("Error fetching countries:", error);
     throw error;

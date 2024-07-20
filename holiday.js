@@ -16,11 +16,10 @@ const outputHolidays = (holidays) => {
 };
 const main = () => __awaiter(void 0, void 0, void 0, function* () {
     const args = process.argv.slice(2);
-    const { countryCode, yearOrNext } = yield (0, utils_1.parseArgs)(args);
-    const year = yearOrNext.toLowerCase() === "next"
-        ? (parseInt((0, utils_1.getCurrentYear)()) + 1).toString()
-        : parseInt(yearOrNext, 10).toString();
-    const holidays = yield (0, api_1.getHolidays)(year, countryCode);
+    const { countryCode, year, isNext } = yield (0, utils_1.parseArgs)(args);
+    const holidays = isNext
+        ? yield (0, api_1.getHolidayByNext)(countryCode)
+        : yield (0, api_1.getHolidaysByYear)(year, countryCode);
     outputHolidays(holidays);
 });
 main();

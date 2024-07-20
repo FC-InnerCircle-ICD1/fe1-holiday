@@ -33,11 +33,18 @@ const parseArgs = (args) => __awaiter(void 0, void 0, void 0, function* () {
         throw new Error("Usage: node holiday.js <countryCode> <year_or_next>");
     }
     const [countryCode, yearOrNext] = args;
+    const isNext = yearOrNext === "next";
     const isValidateCountry = yield (0, exports.validateCountry)(countryCode);
     if (!isValidateCountry)
         throw new Error("Check : countryCode");
-    if (!(0, exports.isValidYear)(yearOrNext) && yearOrNext !== "next")
+    if (!(0, exports.isValidYear)(yearOrNext) && !isNext)
         throw new Error("Check : year_or_next");
-    return { countryCode, yearOrNext };
+    return {
+        countryCode,
+        year: isNext
+            ? parseInt((0, exports.getCurrentYear)()).toString()
+            : parseInt(yearOrNext, 10).toString(),
+        isNext,
+    };
 });
 exports.parseArgs = parseArgs;
