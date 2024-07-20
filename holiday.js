@@ -13,7 +13,6 @@ const fetchHolidays = async (countryCode, yearOrNext) => {
   }
 
   const response = await fetch(url);
-
   if (response.status === 404) {
     throw new Error("Wrong country code");
   }
@@ -46,7 +45,7 @@ const getPublicHolidays = async () => {
       });
     }
   } catch (error) {
-    if (error.status === 404) {
+    if (error.message === "Wrong country code") {
       console.error("Wrong country code");
     } else {
       console.error("An error occurred:", error.message);
