@@ -1,10 +1,11 @@
-const API_URL = 'https://date.nager.at/api/v3';
+import { getSupportedCountryCodes, getHolidaysForYear, getNextPublicHolidays } from './api.js';
+import { printHolidays } from './utils.js';
 
 const args = process.argv.slice(2);
 const [countryCode, yearOrNext] = args;
 
 if (!countryCode || !yearOrNext) {
-    console.error('Usage: node holiday.js <country_code> <year_orNext>');
+    console.error('Usage: node holiday.js <country_code> <year_or_next>');
     process.exit(1);
 }
 
@@ -13,57 +14,7 @@ if (!/^[A-Z]{2}$/.test(countryCode)) {
     process.exit(1);
 }
 
-const getSupportedCountryCodes = async () => {
-    try {
-        const response = await fetch(`${API_URL}/AvailableCountries`);
-        if (response.ok) {
-            const countries = await response.json();
-            return countries.map(country => country.countryCode);
-        } else {
-            throw new Error(`Error: ${response.status}`);
-        }
-    } catch (error) {
-        throw new Error(`Error: ${error.message}`);
-    }
-};
-
-const getHolidaysForYear = async (countryCode, year) => {
-    try {
-        const url = `${API_URL}/PublicHolidays/${year}/${countryCode}`;
-        console.log(`Request URL: ${url}`);
-        const response = await fetch(url);
-        if (response.ok) {
-            return await response.json();
-        } else {
-            throw new Error(`Error: ${response.status}`);
-        }
-    } catch (error) {
-        throw new Error(`Error: ${error.message}`);
-    }
-};
-
-const getNextPublicHolidays = async (countryCode) => {
-  try {
-      const url = `${API_URL}/NextPublicHolidays/${countryCode}`;
-      console.log(`Request URL: ${url}`);
-      const response = await fetch(url);
-      if (response.ok) {
-          return await response.json();
-      } else {
-          throw new Error(`Error: ${response.status}`);
-      }
-  } catch (error) {
-      throw new Error(`Error: ${error.message}`);
-  }
-};
-
-const printHolidays = (holidays) => {
-    holidays.forEach(holiday => {
-        console.log(`${holiday.date} ${holiday.localName} ${holiday.name}`);
-    });
-};
-
-const main = async () => {
+const main = async (countryCode, yearOrNext) => {
     const supportedCountryCodes = await getSupportedCountryCodes();
         
     if (!supportedCountryCodes.includes(countryCode)) {
@@ -81,7 +32,6 @@ const main = async () => {
         console.error('Usage: node holiday.js <country_code> <year_or_next>');
         process.exit(1);
     }
-
 };
 
-main();
+main(countryCode, yearOrNext);
