@@ -5,6 +5,26 @@ const args = process.argv.slice(2); // 첫 두 개의 요소를 제외한 나머
 const country = args[0];
 const year = args[1];
 
+type Holiday = {
+  date: string;
+  localName: string;
+  name: string;
+  countryCode: string;
+  fixed: boolean;
+  global: boolean;
+  counties: string[];
+  launchYear: number;
+  types: string[];
+};
+
+const HOLIDAY_API = "https://date.nager.at/api/v3/publicholidays";
+const getYearsHoliday = async (year: string | number, country: string) => {
+  const res = await fetch(HOLIDAY_API + `/${year}/${country}`);
+  const holidays = (await res.json()) as Holiday[];
+
+  return holidays;
+};
+
 // 결과를 콘솔에 출력합니다.
 console.log(`Country: ${country}`);
 console.log(`Year: ${year}`);
