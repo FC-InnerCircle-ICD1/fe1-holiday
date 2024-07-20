@@ -1,5 +1,5 @@
 import { isArgumentsValid } from "./util.js";
-import { validateCountryCode, fetchHolidays } from "./api.js";
+import { isCountryCodeInvalid, fetchHolidays } from "./api.js";
 
 const main = async () => {
   if (!isArgumentsValid(process.argv)) {
@@ -11,7 +11,7 @@ const main = async () => {
 
   const [, , countryCode, year] = process.argv;
 
-  if (!(await validateCountryCode(countryCode))) {
+  if (await isCountryCodeInvalid(countryCode)) {
     console.error("Wrong country code");
     return;
   }

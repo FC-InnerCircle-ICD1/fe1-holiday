@@ -1,8 +1,8 @@
 import { API_HOST } from "./constants.js";
 
-export const validateCountryCode = async (countryCode) => {
+export const isCountryCodeInvalid = async (countryCode) => {
   const result = await fetch(`${API_HOST}/api/v3/CountryInfo/${countryCode}`);
-  return result.ok;
+  return result.status === 404;
 };
 
 export const fetchYearHolidays = async (countryCode, year) => {
