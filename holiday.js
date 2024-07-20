@@ -4,7 +4,10 @@ const HOLIDAY_API_URL = "https://date.nager.at/api/v3";
 const [, , countryCodeInput, yearOrNext] = process.argv;
 
 const countryCode = countryCodeInput.toUpperCase();
-const year = parseInt(yearOrNext);
+const isNext =
+  isNaN(parseInt(yearOrNext)) &&
+  String(yearOrNext).toLocaleLowerCase() === "next";
+const year = isNext ? new Date().getFullYear() : parseInt(yearOrNext);
 
 const fetchHolidayYear = (_country, _year) => {
   return new Promise((resolve, reject) => {
