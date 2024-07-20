@@ -36,9 +36,9 @@ const parseArgs = (args) => __awaiter(void 0, void 0, void 0, function* () {
     const isNext = yearOrNext === "next";
     const isValidateCountry = yield (0, exports.validateCountry)(countryCode);
     if (!isValidateCountry)
-        throw new Error("Check : countryCode");
+        throw new Error("Check : countryCode format");
     if (!(0, exports.isValidYear)(yearOrNext) && !isNext)
-        throw new Error("Check : year_or_next");
+        throw new Error("Check : year_or_next format");
     return {
         countryCode,
         year: isNext

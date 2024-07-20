@@ -13,54 +13,36 @@ exports.getHolidayByNext = exports.checkAvailableCountries = exports.getHolidays
 const BASE_URL = "https://date.nager.at/api/v3";
 const getHolidaysByYear = (year, countryCode) => __awaiter(void 0, void 0, void 0, function* () {
     const url = `${BASE_URL}/publicholidays/${year}/${countryCode}`;
-    try {
-        const response = yield fetch(url);
-        if (!response.ok) {
-            const message = response.status === 404
-                ? "CountryCode is unknown"
-                : response.status === 400
-                    ? "Validation failure"
-                    : "";
-            throw new Error(`Error fetching holidays:${response.status} ${response.statusText} ${message}`);
-        }
-        const holidays = yield response.json();
-        return holidays;
+    const response = yield fetch(url);
+    if (!response.ok) {
+        const message = response.status === 404
+            ? "CountryCode is unknown"
+            : response.status === 400
+                ? "Validation failure"
+                : "";
+        throw new Error(`Error fetching holidays:${response.status} ${response.statusText} ${message}`);
     }
-    catch (error) {
-        console.error("Error fetching holidays:", error);
-        throw error;
-    }
+    const holidays = yield response.json();
+    return holidays;
 });
 exports.getHolidaysByYear = getHolidaysByYear;
 const checkAvailableCountries = () => __awaiter(void 0, void 0, void 0, function* () {
     const url = `${BASE_URL}/AvailableCountries`;
-    try {
-        const response = yield fetch(url);
-        if (!response.ok) {
-            throw new Error(`Error fetching countries:${response.status} ${response.statusText}`);
-        }
-        const countries = yield response.json();
-        return countries;
+    const response = yield fetch(url);
+    if (!response.ok) {
+        throw new Error(`Error fetching countries:${response.status} ${response.statusText}`);
     }
-    catch (error) {
-        console.error("Error fetching countries:", error);
-        throw error;
-    }
+    const countries = yield response.json();
+    return countries;
 });
 exports.checkAvailableCountries = checkAvailableCountries;
 const getHolidayByNext = (countryCode) => __awaiter(void 0, void 0, void 0, function* () {
     const url = `${BASE_URL}/NextPublicHolidays/${countryCode}`;
-    try {
-        const response = yield fetch(url);
-        if (!response.ok) {
-            throw new Error(`Error fetching countries:${response.status} ${response.statusText}`);
-        }
-        const holidays = yield response.json();
-        return holidays;
+    const response = yield fetch(url);
+    if (!response.ok) {
+        throw new Error(`Error fetching countries:${response.status} ${response.statusText}`);
     }
-    catch (error) {
-        console.error("Error fetching countries:", error);
-        throw error;
-    }
+    const holidays = yield response.json();
+    return holidays;
 });
 exports.getHolidayByNext = getHolidayByNext;
