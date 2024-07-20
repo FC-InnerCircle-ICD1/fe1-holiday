@@ -12,7 +12,7 @@ const request = async (url) => {
 };
 
 const checkInputValues = (countryCodeInput, yearOrNext) => {
-  if (countryCodeInput === undefined || yearOrNext === undefined) {
+  if (!countryCodeInput || !yearOrNext) {
     console.error(
       "Please provide a country code and a year or 'next' as arguments"
     );
@@ -72,7 +72,7 @@ const checkAvailableCountriesCode = async (countryCode) => {
 
 (async function () {
   checkInputValues(countryCodeInput, yearOrNext);
-  // checkAvailableCountriesCode(countryCodeInput);
+  checkAvailableCountriesCode(countryCodeInput);
 
   const { isNext, year } = extractYearOrNext(yearOrNext);
   const countryCode = countryCodeInput.toUpperCase();
