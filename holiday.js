@@ -1,64 +1,70 @@
-// 함수 정의: year와 countryCode를 받아서 API 호출
-const getPublicHolidays = async (year, countryCode) => {
-  let y = year === "next" ? new Date().getFullYear() : year;
-  const c = countryCode;
+const baseURL = `https://date.nager.at/api/v3`;
 
-  const url = `https://date.nager.at/api/v3/publicholidays/${y}/${c}`;
+const printHolidays = (holidays) => {
+  return holidays.forEach((holiday) => {
+    const { date, name, localName } = holiday;
 
-  /**
-   * @desc holiday 반환처리
-   * @param {*} data
-   * @param {*} today
-   * @returns
-   */
-  const returnHolidays = (data, today) => {
-    data.forEach((holiday) => {
-      const { date, name, localName } = holiday;
-      const holidayDate = new Date(date);
+    console.log(`${date} ${name} ${localName}`);
+  });
+};
 
-      // year가 next인 경우, 오늘 이후의 공휴일만 출력
-      if (year === "next" && holidayDate > today) {
-        console.log(`${date} ${name} ${localName}`);
-      } else if (year !== "next") {
-        console.log(`${date} ${name} ${localName}`);
-      }
-    });
-  };
-
+const fetchNextHolidays = async (countryCode) => {
   try {
-    const response = await fetch(url);
-    if (response.ok) {
-      const holidays = await response.json();
-      const today = new Date();
+    const res = await fetch(`${baseURL}/NextPublicHolidays/${countryCode}`);
 
-      // 반환
-      return returnHolidays(holidays, today);
+    if (res.status === 404) {
+      throw new Error("Error: 존재하지 않는 국가코드입니다.");
     }
 
-    if (!response.ok) {
-      if (response.status === 400) {
-        return console.error("Error: Validation failure");
-      }
-
-      if (response.status === 404) {
-        return console.error("Error: 존재하지 않는 국가코드입니다.");
-      }
-
-      return console.error(`Error: ${response.statusText}`);
+    if (!res.ok) {
+      throw new Error(`HTTP Error status : ${res.status}`);
     }
-  } catch (error) {
-    return console.error("Error fetching data:", error);
+
+    return res.json();
+  } catch (err) {
+    console.log(err.message);
   }
 };
 
-// Node.js 명령어 인수를 받아서 함수 호출
-const args = process.argv.slice(2);
-const [countryCode, year] = args;
+const fetchHolidays = async (countryCode, year) => {
+  try {
+    const res = await fetch(`${baseURL}/publicholidays/${year}/${countryCode}`);
 
-if (!countryCode || !year) {
-  console.error("Usage: node holiday.js <countryCode> <year>");
-  process.exit(1);
+    if (res.ok) {
+      return res.json();
+    }
+
+    if (res.status === 400) {
+      throw new Error("Error: Validation failure");
+    }
+
+    if (res.status === 404) {
+      throw new Error("Error: 존재하지 않는 국가코드입니다.");
+    }
+
+    console.error(`Error: ${res.statusText}`);
+  } catch (error) {
+    console.error("Error fetching data:", error);
+  }
+};
+
+const getHolidays = async (countryCode, yearOrNext) => {
+  return yearOrNext === "next"
+    ? fetchNextHolidays(countryCode)
+    : fetchHolidays(countryCode, yearOrNext);
+};
+
+const main = async (countryCode, yearOrNext) => {
+  const holidays = await getHolidays(countryCode, yearOrNext);
+  if (holidays) {
+    printHolidays(holidays);
+  }
+};
+
+const args = process.argv.slice(2);
+
+if (args?.length != 2) {
+  console.log(`arg 인수가 옳지 않습니다.`);
 }
 
-// 함수 실행
-getPublicHolidays(year, countryCode);
+main(...args);
