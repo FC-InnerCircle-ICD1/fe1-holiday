@@ -40,7 +40,8 @@ async function isValidCountryCode(countryCode) {
     try {
         const response = await fetch(availableCountriesUrl);
         if (!response.ok) {
-            throw new Error(`HTTP 오류! 상태 코드: ${response.status}`);
+            console.error(`api fetch 오류 상태 코드: ${response.status}`)
+            return false;
         }
         const countries = await response.json();
         return countries.find(function(country) {
