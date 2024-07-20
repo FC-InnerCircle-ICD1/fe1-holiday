@@ -9,7 +9,7 @@ class HTTPError extends Error {
   }
 }
 
-const fetchClient = async (url) => {
+const requestJsonFromUrl = async (url) => {
   const res = await fetch(url);
 
   if (!res.ok) {
@@ -47,17 +47,17 @@ const extractYearOrNext = (yearOrNext) => {
 
 const fetchHolidayYear = async (country, year) => {
   const fetchUrl = `${HOLIDAY_API_URL}/PublicHolidays/${year}/${country}`;
-  return fetchClient(fetchUrl);
+  return requestJsonFromUrl(fetchUrl);
 };
 
 const fetchAvailableCountries = async () => {
   const fetchUrl = `${HOLIDAY_API_URL}/AvailableCountries`;
-  return fetchClient(fetchUrl);
+  return requestJsonFromUrl(fetchUrl);
 };
 
 const fetchNextPublicHoliday = async (country) => {
   const fetchUrl = `${HOLIDAY_API_URL}/NextPublicHolidays/${country}`;
-  return fetchClient(fetchUrl);
+  return requestJsonFromUrl(fetchUrl);
 };
 
 const handleHolidaysError = (error) => {
