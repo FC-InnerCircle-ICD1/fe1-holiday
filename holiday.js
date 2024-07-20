@@ -9,6 +9,8 @@ class HTTPError extends Error {
   }
 }
 
+const isHTTPError = (error) => error instanceof HTTPError;
+
 const requestJsonFromUrl = async (url) => {
   const res = await fetch(url);
 
@@ -55,24 +57,44 @@ const fetchNextPublicHoliday = async (country) => {
   return requestJsonFromUrl(fetchUrl);
 };
 
+const fetchCountryInfo = async (countryCode) => {
+  const fetchUrl = `${HOLIDAY_API_URL}/CountryInfo/${countryCode}`;
+  return requestJsonFromUrl(fetchUrl);
+};
+
+const checkCountryCode = async (countryCode) => {
+  try {
+    await fetchCountryInfo(countryCode);
+  } catch (error) {
+    if (isHTTPError(error)) {
+      if (error.code === 404) {
+        console.error(`Wrong country code: ${countryCode}`);
+        throw new Error("Wrong country code");
+      }
+    }
+  }
+};
+
 const handleHolidaysError = (error) => {
-  if (error instanceof HTTPError) {
+  if (isHTTPError(error)) {
     if (error.code === 400) {
       console.error("Validation Failure");
     }
     if (error.code === 404) {
-      console.error(`CountryCode is unknown `);
+      console.error(`Wrong country code`);
     }
   }
   return;
 };
 
 (async function () {
-  checkInputValues(countryCodeInput, yearOrNext);
-  const { isNext, year } = extractYearOrNext(yearOrNext);
-  const countryCode = countryCodeInput.toUpperCase();
-
   try {
+    checkInputValues(countryCodeInput, yearOrNext);
+    await checkCountryCode(countryCodeInput);
+
+    const { isNext, year } = extractYearOrNext(yearOrNext);
+    const countryCode = countryCodeInput.toUpperCase();
+
     const holidays = isNext
       ? await fetchNextPublicHoliday(countryCode)
       : await fetchHolidayYear(countryCode, year);
