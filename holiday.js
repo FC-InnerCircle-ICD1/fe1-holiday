@@ -46,8 +46,8 @@ const extractYearOrNext = (yearOrNext) => {
   };
 };
 
-const fetchHolidayYear = async (_country, _year) => {
-  const fetchUrl = `${HOLIDAY_API_URL}/PublicHolidays/${_year}/${_country}`;
+const fetchHolidayYear = async (country, year) => {
+  const fetchUrl = `${HOLIDAY_API_URL}/PublicHolidays/${year}/${country}`;
   return fetchClient(fetchUrl);
 };
 
@@ -56,8 +56,8 @@ const fetchAvailableCountries = async () => {
   return fetchClient(fetchUrl);
 };
 
-const fetchNextPublicHoliday = async (_country) => {
-  const fetchUrl = `${HOLIDAY_API_URL}/NextPublicHolidays/${_country}`;
+const fetchNextPublicHoliday = async (country) => {
+  const fetchUrl = `${HOLIDAY_API_URL}/NextPublicHolidays/${country}`;
   return fetchClient(fetchUrl);
 };
 
