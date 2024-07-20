@@ -40,10 +40,6 @@ const printHolidays = (holidays) => {
   });
 };
 
-const filterFutureHolidays = (holidays, fromDate) => {
-  return holidays.filter((holiday) => new Date(holiday.date) >= fromDate);
-};
-
 const getHolidays = async (country, yearOrNext) => {
   return yearOrNext === 'next'
     ? await fetchNextHolidays(country)
@@ -53,7 +49,11 @@ const getHolidays = async (country, yearOrNext) => {
 // 메인 함수
 const main = async (country, yearOrNext) => {
   const holidays = await getHolidays(country, yearOrNext);
-  printHolidays(holidays);
+  if (holidays && Array.isArray(holidays) && holidays.length > 0) {
+    printHolidays(holidays);
+  } else {
+    console.log('휴일 정보를 가져오는데 실패했거나 휴일 정보가 없습니다.');
+  }
 };
 
 if (inputs.length != 2) {
