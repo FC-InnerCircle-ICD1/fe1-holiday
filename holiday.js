@@ -1,4 +1,4 @@
-import { isArgumentsValid } from "./util.js";
+import { isArgumentsValid } from "./validation.js";
 import { isCountryCodeInvalid, fetchHolidays } from "./api.js";
 
 const main = async () => {
