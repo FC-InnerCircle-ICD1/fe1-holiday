@@ -23,10 +23,8 @@ const fetchHolidays = async (country, year) => {
 const fetchNextHolidays = async (country) => {
   try {
     const response = await fetch(`${BASE_URL}/NextPublicHolidays/${country}`);
-    if (response.status === 404) {
+    if (response.status === 500) {
       throw new Error('Wrong country code');
-    } else if (response.status === 500) {
-      throw new Error('Server error');
     } else if (!response.ok) {
       throw new Error(`HTTP error! status: ${response.status}`);
     }
