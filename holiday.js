@@ -4,7 +4,7 @@ const args = process.argv.slice(2);
 const [countryCode, yearOrNext] = args;
 
 if (!countryCode || !yearOrNext) {
-  console.error("Error: 인수가 충분하지 않습니다.");
+  console.error("Error: Not enough parameters.");
   process.exit(1);
 }
 
@@ -29,7 +29,7 @@ const printHolidays = (holidays) => {
 
 const getPublicHolidays = async (countryCode, yearOrNext) => {
   countryCodeValidation(countryCode);
-  if (yearOrNext === "next") {
+  if (yearOrNext.toLowerCase() === "next") {
     const url = `${API_URL}/NextPublicHolidays/${countryCode}`;
     const response = await fetch(url);
     if (response.ok) {
