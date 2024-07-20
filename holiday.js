@@ -308,9 +308,7 @@ async function execute() {
   }
 
   if (!isValidCountryCode(countryCode)) {
-    console.error(
-      '프로그램이 종료됩니다. 이유: countryCode가 유효하지 않습니다.'
-    );
+    console.error('Wrong country code');
     process.exit();
   }
 
