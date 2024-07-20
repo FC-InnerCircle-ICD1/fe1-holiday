@@ -75,7 +75,7 @@ const checkCountryCode = async (countryCode) => {
   }
 };
 
-const handleGetHolidaysError = (error) => {
+const handleErrorFetchHolidays = (error) => {
   if (isHTTPError(error)) {
     if (error.code === 400) {
       console.error("Validation Failure");
@@ -83,8 +83,6 @@ const handleGetHolidaysError = (error) => {
     if (error.code === 404) {
       console.error(`Wrong country code`);
     }
-  } else {
-    console.error(error.message);
   }
 };
 
@@ -92,10 +90,14 @@ const handleGetHolidaysError = (error) => {
   try {
     checkInputValues(countryCodeInput, yearOrNext);
     await checkCountryCode(countryCodeInput);
+  } catch (error) {
+    process.exit(1);
+  }
 
-    const { isNext, year } = extractYearOrNext(yearOrNext);
-    const countryCode = countryCodeInput.toUpperCase();
+  const { isNext, year } = extractYearOrNext(yearOrNext);
+  const countryCode = countryCodeInput.toUpperCase();
 
+  try {
     const holidays = isNext
       ? await fetchNextPublicHoliday(countryCode)
       : await fetchHolidayYear(countryCode, year);
@@ -111,7 +113,7 @@ const handleGetHolidaysError = (error) => {
     console.log(result.join("\n"));
     process.exit(0);
   } catch (error) {
-    handleGetHolidaysError(error);
+    handleErrorFetchHolidays(error);
     process.exit(1);
   }
 })();
