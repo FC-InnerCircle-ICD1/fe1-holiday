@@ -7,6 +7,11 @@ export type Holiday = {
   localName: string;
   name: string;
 };
+
+export type Country = {
+  countryCode: string;
+  name: string;
+};
 export const getHolidays = async (
   year: string,
   countryCode: string
@@ -34,12 +39,7 @@ export const getHolidays = async (
   }
 };
 
-export const checkAvailableCountries = async (): Promise<
-  {
-    countryCode: string;
-    name: string;
-  }[]
-> => {
+export const checkAvailableCountries = async (): Promise<Country[]> => {
   const url = `${BASE_URL}/AvailableCountries`;
   try {
     const response = await fetch(url);
