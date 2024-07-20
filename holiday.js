@@ -46,10 +46,10 @@ const getPublicHolidays = async (year, countryCode) => {
       if (response.status === 404) {
         console.error("Error: 존재하지 않는 국가코드입니다.");
         process.exit(1);
-      } else {
-        console.error(`Error: ${response.statusText}`);
-        process.exit(1);
       }
+
+      console.error(`Error: ${response.statusText}`);
+      process.exit(1);
     }
   } catch (error) {
     console.error("Error fetching data:", error);
