@@ -21,6 +21,23 @@ async function searchHoliday(countryCode, year) {
   }
 }
 
+async function searchNextHoliday(countryCode) {
+  try {
+    const response = await fetch(
+      `${API_BASE_URL}/NextPublicHolidays/${countryCode}`
+    );
+
+    if (response.ok === false) {
+      throw new Error('서버와 통신할 때 에러가 발생했습니다.');
+    }
+
+    const result = await response.json();
+    return result;
+  } catch (error) {
+    console.error('error =', error);
+  }
+}
+
 async function execute() {
   const [, , countryCode, year] = process.argv;
 
@@ -42,7 +59,14 @@ async function execute() {
   //   process.exit();
   // }
 
-  const holidays = await searchHoliday(countryCode, year);
+  let holidays;
+
+  if (year === 'next') {
+    holidays = await searchNextHoliday(countryCode);
+  } else {
+    holidays = await searchHoliday(countryCode, year);
+  }
+
   const formattedHolidays = formatHoliday(holidays);
   formattedHolidays.forEach((holiday) => console.log(holiday.join(' ')));
 }
