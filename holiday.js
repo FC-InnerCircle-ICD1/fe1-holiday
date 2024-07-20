@@ -16,10 +16,16 @@ const outputHolidays = (holidays) => {
 };
 const main = () => __awaiter(void 0, void 0, void 0, function* () {
     const args = process.argv.slice(2);
-    const { countryCode, year, isNext } = yield (0, utils_1.parseArgs)(args);
-    const holidays = isNext
-        ? yield (0, api_1.getHolidayByNext)(countryCode)
-        : yield (0, api_1.getHolidaysByYear)(year, countryCode);
-    outputHolidays(holidays);
+    try {
+        const { countryCode, year, isNext } = yield (0, utils_1.parseArgs)(args);
+        const holidays = isNext
+            ? yield (0, api_1.getHolidayByNext)(countryCode)
+            : yield (0, api_1.getHolidaysByYear)(year, countryCode);
+        outputHolidays(holidays);
+    }
+    catch (error) {
+        console.error(error.message);
+        process.exit();
+    }
 });
 main();

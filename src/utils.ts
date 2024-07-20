@@ -28,10 +28,10 @@ export const parseArgs = async (args: string[]) => {
   const [countryCode, yearOrNext] = args;
   const isNext = yearOrNext === "next";
   const isValidateCountry = await validateCountry(countryCode);
-  if (!isValidateCountry) throw new Error("Check : countryCode");
+  if (!isValidateCountry) throw new Error("Check : countryCode format");
 
   if (!isValidYear(yearOrNext) && !isNext)
-    throw new Error("Check : year_or_next");
+    throw new Error("Check : year_or_next format");
 
   return {
     countryCode,
