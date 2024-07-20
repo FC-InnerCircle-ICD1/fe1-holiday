@@ -1,11 +1,13 @@
 const https = require("https");
 
 // 함수 정의: year와 countryCode를 받아서 API 호출
-function getPublicHolidays(year, countryCode) {
+const getPublicHolidays = (year, countryCode) => {
   let y = year == "next" ? new Date().getFullYear() : year;
   const c = countryCode;
 
-  // 옵션 설정
+  /**
+   * @desc api option
+   */
   const options = {
     hostname: "date.nager.at",
     port: 443,
