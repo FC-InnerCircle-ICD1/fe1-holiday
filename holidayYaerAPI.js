@@ -19,9 +19,7 @@ async function getPublicHolidays(year, countryCode) {
 
             let errorMessage = ''
             errorKeys.map(key => jsonData.errors[key].map((item) => errorMessage += item + "\n"))
-            return errorMessage
-
-
+            throw new Error(`${errorMessage}`)
 
         } else {
             const fixJsonData = jsonData.map((item) => ({

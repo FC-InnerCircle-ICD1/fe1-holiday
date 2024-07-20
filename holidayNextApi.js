@@ -17,8 +17,6 @@ async function getNextHolidays(countryCode) {
         const jsonData = await response.json();
         const fixJsonData = jsonData
             .filter(item => {
-                console.log("item.date.slice(0, 4):", item.date.slice(0, 4))
-                console.log("currentYear:", currentYear)
                 return parseInt(item.date.slice(0, 4)) === currentYear
             })
             .map(item => ({
