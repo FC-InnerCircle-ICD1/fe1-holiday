@@ -1,6 +1,6 @@
-const $baseUrl = 'https://date.nager.at/api/v3/';
-const $PublicHolidays = $baseUrl + 'PublicHolidays';
-const $NextPublicHolidays = $baseUrl + 'NextPublicHolidays';
+const baseUrl = 'https://date.nager.at/api/v3/';
+const publicHolidaysUrl = `${baseUrl}PublicHolidays`;
+const nextPublicHolidaysUrl = `${baseUrl}NextPublicHolidays`;
 
 async function getHoliday() {
     const args = process.argv.slice(2);
@@ -10,9 +10,9 @@ async function getHoliday() {
 
     let url;
     if (yearOrNext.toLowerCase() === 'next') {
-        url = `${$NextPublicHolidays}/${countryCode}`;
+        url = `${nextPublicHolidaysUrl}/${countryCode}`;
     } else {
-        url = `${$PublicHolidays}/${yearOrNext}/${countryCode}`;
+        url = `${publicHolidaysUrl}/${yearOrNext}/${countryCode}`;
     }
 
     try {
