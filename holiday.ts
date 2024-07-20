@@ -25,6 +25,8 @@ const getYearsHoliday = async (year: string | number, country: string) => {
   return holidays;
 };
 
-// 결과를 콘솔에 출력합니다.
-console.log(`Country: ${country}`);
-console.log(`Year: ${year}`);
+const printHolidays = (holidays: Holiday[]) => {
+  holidays.forEach((holiday) => {
+    console.log(`${holiday.date} ${holiday.localName} ${holiday.name}`);
+  });
+};
