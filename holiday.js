@@ -17,17 +17,17 @@ fetch(`https://date.nager.at/api/v3/PublicHolidays/${year}/${countryCode}`)
             console.error('Country code not found');
             return;
         } else if (data.status === 400) {
-            console.error('Year not found');
+            console.error('Validation failure');
             return;
         }
         data.forEach(holiday => {
             if(nextYn) {
                 const holidayDate = new Date(holiday.date);
                 if (holidayDate > today) {
-                    console.log(holiday.name);
+                    console.log(holiday.date ,' ',holiday.name ,' ',holiday.localName);
                 }
             } else 
-                console.log(holiday.name);
+                console.log(holiday.date ,' ',holiday.name ,' ',holiday.localName);
         });
     })
     .catch(error => {
