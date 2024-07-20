@@ -15,7 +15,7 @@ const checkInputValues = (countryCodeInput, yearOrNext) => {
   }
 };
 
-const checkYearOrNext = (yearOrNext) => {
+const extractYearOrNext = (yearOrNext) => {
   const isNext =
     isNaN(parseInt(yearOrNext)) &&
     String(yearOrNext).toLocaleLowerCase() === "next";
@@ -23,12 +23,6 @@ const checkYearOrNext = (yearOrNext) => {
 
   return year;
 };
-
-checkInputValues(countryCodeInput, yearOrNext);
-
-const year = checkYearOrNext(yearOrNext);
-const countryCode = countryCodeInput.toUpperCase();
-const TODAY = new Date();
 
 const fetchHolidayYear = async (_country, _year) => {
   const fetchUrl = `${HOLIDAY_API_URL}/PublicHolidays/${_year}/${_country}`;
@@ -40,6 +34,12 @@ const fetchHolidayYear = async (_country, _year) => {
 
   return res.json();
 };
+
+checkInputValues(countryCodeInput, yearOrNext);
+
+const year = extractYearOrNext(yearOrNext);
+const countryCode = countryCodeInput.toUpperCase();
+const TODAY = new Date();
 
 fetchHolidayYear(countryCode, year)
   .then((holidays) => {
