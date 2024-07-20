@@ -103,11 +103,9 @@ const handleHolidaysError = (error) => {
       throw new Error("No holidays found");
     }
 
-    const result = holidays
-      .map((holiday) => {
-        return [holiday.date, holiday.name, holiday.localName].join(" ");
-      })
-      .filter((holiday) => holiday !== null);
+    const result = holidays.map((holiday) => {
+      return [holiday.date, holiday.name, holiday.localName].join(" ");
+    });
 
     console.log(result.join("\n"));
   } catch (error) {
