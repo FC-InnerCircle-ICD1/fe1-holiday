@@ -40,8 +40,8 @@ const printNextHolidays = async () => {
   holidays.forEach(printDay);
 };
 
-const fetchHolidays = () => {
+const main = () => {
   year === "next" ? printNextHolidays() : printHolidays();
 };
 
-fetchHolidays(countryCode, year);
+main(countryCode, year);
