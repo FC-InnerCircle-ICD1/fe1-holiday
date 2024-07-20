@@ -303,13 +303,10 @@ async function searchNextHoliday(countryCode) {
 async function execute() {
   const [, , countryCode, year] = process.argv;
 
-  if (!countryCode) {
-    console.error('프로그램이 종료됩니다. 이유: countryCode를 입력해주세요.');
-    process.exit();
-  }
-
-  if (!year) {
-    console.error('프로그램이 종료됩니다. 이유: year를 입력해주세요.');
+  if (!countryCode || !year) {
+    console.error(
+      '프로그램이 종료됩니다. 이유: 충분한 인수가 전달되지 않았습니다.'
+    );
     process.exit();
   }
 
