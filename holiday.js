@@ -49,7 +49,17 @@ function getPublicHolidays(year, countryCode) {
       });
     }
 
-    //
+    // Validation failure
+    // 유효성 검증 실패
+    if (res.statusCode === 400) {
+      return console.error("Validation failure");
+    }
+
+    // CountryCode is unknown
+    // 국가코드 미존재로 인한 에러
+    if (res.statusCode === 404) {
+      return console.error("Error: 존재하지 않는 국가코드입니다.");
+    }
   });
   req.end();
 }
