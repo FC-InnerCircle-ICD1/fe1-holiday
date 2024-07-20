@@ -9,6 +9,13 @@ const isInteger = (str) => {
   return Number.isInteger(num) && num.toString() === str;
 };
 
+const isArgumentsValid = (argv) => {
+  return (
+    process.argv.length === EXPECTED_ARGV_LENGTH &&
+    (isInteger(process.argv[3]) || process.argv[3] === "next")
+  );
+};
+
 const validateCountryCode = async (countryCode) => {
   const result = await fetch(`${API_HOST}/api/v3/CountryInfo/${countryCode}`);
   return result.ok;
@@ -35,10 +42,7 @@ const fetchHolidays = async (countryCode, year) => {
 };
 
 const main = async () => {
-  if (
-    process.argv.length !== EXPECTED_ARGV_LENGTH ||
-    !(isInteger(process.argv[3]) || process.argv[3] === "next")
-  ) {
+  if (!isArgumentsValid(process.argv)) {
     console.error(
       '"node holiday.js 국가코드 연도_또는_next" 형식으로 입력해주세요.'
     );
