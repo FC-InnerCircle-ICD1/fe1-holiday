@@ -8,11 +8,11 @@ async function run() {
     return console.error("연도는 필수 입력입니다.");
   }
 
-  const res = await fetch(
-    `https://date.nager.at/api/v3/PublicHolidays/${years}/${countryCode}`
-  );
+  const isNextYear = years === 'next';
+  const fetchUrl = isNextYear ? `https://date.nager.at/api/v3/NextPublicHolidays/${countryCode}` : `https://date.nager.at/api/v3/PublicHolidays/${years}/${countryCode}` 
+  const res = await fetch(fetchUrl);
   const body = await res.json();
-  if (res.status === 404) {
+  if ((isNextYear && res.status === 500) || res.status === 404) {
     return console.error("Wrong country code");
   }
   if (res.status === 400) {
