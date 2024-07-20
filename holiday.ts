@@ -13,25 +13,21 @@ type Holiday = {
 const HOLIDAY_API = "https://date.nager.at/api/v3";
 
 const getYearsHolidays = async (year: string, countryCode: string) => {
-  try {
-    const res = await fetch(
-      `${HOLIDAY_API}/publicholidays/${year}/${countryCode}`
-    );
-    const holidays = (await res.json()) as Holiday[];
+  const url = `${HOLIDAY_API}/publicholidays/${year}/${countryCode}`;
 
-    return holidays;
-  } catch (e) {
-    console.log("에러 발생");
-    console.error(e);
-    return [];
-  }
+  return fetchHolidays<Holiday>(url);
 };
 
 const getNextHolidays = async (countryCode: string) => {
+  const url = `${HOLIDAY_API}/NextPublicHolidays/${countryCode}`;
+
+  return fetchHolidays<Holiday>(url);
+};
+
+const fetchHolidays = async <T>(url: string) => {
   try {
-    const res = await fetch(`${HOLIDAY_API}/NextPublicHolidays/${countryCode}`);
-    const holidays = (await res.json()) as Holiday[];
-    return holidays;
+    const res = await fetch(url);
+    return res.json() as Promise<T[]>;
   } catch (e) {
     console.log("에러 발생");
     console.error(e);
@@ -101,3 +97,13 @@ const main = async () => {
 };
 
 main();
+
+export {
+  Holiday,
+  getYearsHolidays,
+  getNextHolidays,
+  printHolidays,
+  printAllYearsHolidays,
+  printYearsNextHolidays,
+  isValidateCountryCode,
+};
