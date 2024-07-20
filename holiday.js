@@ -28,7 +28,7 @@ async function fetchHolidays() {
         }
 
         let data
-        if (option.toUpperCase === 'NEXT') {
+        if (option.toUpperCase() === 'NEXT') {
             data = await getNextHolidays(countryCode);
             data.map((item) => {
                 console.log(`${item.date} ${item.eName} ${item.localName}`)
