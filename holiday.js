@@ -43,7 +43,7 @@ const main = async (country, yearOrNext) => {
 
 if (inputs.length != 2) {
   console.log(
-    '충분한 인수가 전달되지 않았습니다. 첫번째 인자 국가코드, 두번째 인자 연도 / next 을 입력해주세요'
+    '2개 인수가 전달되지 않았습니다. 첫번째 인자 국가코드, 두번째 인자 연도 / next 을 입력해주세요'
   );
 } else {
   main(...inputs);
