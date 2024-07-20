@@ -24,6 +24,21 @@ const printAllYearsHoliday = async (year: string, country: string) => {
 
   printHolidays(holidays);
 };
+
+const printYearsNextHoliday = async (country: string) => {
+  const year = new Date().getFullYear();
+  const today = new Date();
+
+  const holidays = await getYearsHoliday(year, country);
+
+  const nextHoliday = holidays.filter((holiday) => {
+    const holidayDate = new Date(holiday.date);
+    return holidayDate > today;
+  });
+
+  printHolidays(nextHoliday);
+};
+
 const getYearsHoliday = async (year: string | number, country: string) => {
   const res = await fetch(HOLIDAY_API + `/${year}/${country}`);
   const holidays = (await res.json()) as Holiday[];
