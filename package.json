@@ -1,0 +1,12 @@
+{
+  "name": "fe1-holiday",
+  "version": "1.0.0",
+  "description": "커맨드 라인에서 각 국가의 공휴일을 확인할 수 있는 Node.js 애플리케이션",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
+}
