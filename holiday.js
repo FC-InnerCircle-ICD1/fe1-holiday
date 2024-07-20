@@ -257,7 +257,13 @@ function isValidCountryCode(countryCode) {
 }
 
 function formatHoliday(holidays) {
-  return holidays.map(({ date, localName, name }) => [date, localName, name]);
+  let holidayText = '';
+
+  holidays.forEach(({ date, localName, name }) => {
+    holidayText += `${date} ${localName} ${name}\n`;
+  });
+
+  return holidayText;
 }
 
 async function searchHoliday(countryCode, year) {
@@ -320,8 +326,7 @@ async function execute() {
     holidays = await searchHoliday(countryCode, year);
   }
 
-  const formattedHolidays = formatHoliday(holidays);
-  formattedHolidays.forEach((holiday) => console.log(holiday.join(' ')));
+  console.log(formatHoliday(holidays));
 }
 
 execute();
