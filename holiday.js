@@ -33,7 +33,6 @@ const getPublicHolidays = (year, countryCode) => {
         console.log(`${date} ${name} ${localName}`);
       }
     });
-    //  양식에 맞는 배열처리
   };
 
   /**
@@ -53,8 +52,8 @@ const getPublicHolidays = (year, countryCode) => {
       res.on("end", async () => {
         try {
           const holidays = JSON.parse(data);
-          // 오늘 이후 날짜를 구합니다.
           const today = new Date();
+
           // 반환
           return returnHolidays(holidays, today);
         } catch (error) {
