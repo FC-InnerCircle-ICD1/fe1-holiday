@@ -14,8 +14,10 @@ const countryCodeValidation = async (countryCode) => {
   if (response.ok) {
     return await response.json();
   } else {
-    console.error("Error: Wrong country code");
-    throw new Error(`Error: ${response.title}. (${response.status})`);
+    console.error(
+      `Error: Wrong country code. Input countryCode: ${countryCode}`
+    );
+    process.exit(1);
   }
 };
 
