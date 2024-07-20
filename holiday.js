@@ -34,21 +34,33 @@ const fetchHolidayYear = async (_country, _year) => {
 
   return res.json();
 };
+const fetchAvailableCountries = async () => {
+  const fetchUrl = `${HOLIDAY_API_URL}/AvailableCountries`;
+  const res = await fetch(fetchUrl);
 
-checkInputValues(countryCodeInput, yearOrNext);
+  if (!res.ok) {
+    throw new Error(`HTTP error! status: ${res.status} ${res}`);
+  }
 
-const year = extractYearOrNext(yearOrNext);
-const countryCode = countryCodeInput.toUpperCase();
-const TODAY = new Date();
+  return res.json();
+};
 
-fetchHolidayYear(countryCode, year)
-  .then((holidays) => {
+(async function () {
+  checkInputValues(countryCodeInput, yearOrNext);
+
+  const year = extractYearOrNext(yearOrNext);
+  const countryCode = countryCodeInput.toUpperCase();
+  const TODAY = new Date();
+
+  try {
+    const holidays = await fetchHolidayYear(countryCode, year);
+
     if (holidays.length === 0) {
       console.log(`No holidays found for ${countryCode} in ${year}`);
       process.exit(0);
     }
 
-    return holidays
+    const result = holidays
       .map((holiday) => {
         if (new Date(holiday.date).getTime() <= TODAY.getTime()) {
           return null;
@@ -56,10 +68,11 @@ fetchHolidayYear(countryCode, year)
         return [holiday.date, holiday.name, holiday.localName].join(" ");
       })
       .filter((holiday) => holiday !== null);
-  })
-  .then((holidays) => {
-    console.log(holidays.join("\n"));
-  })
-  .catch((err) => {
-    console.error(err);
-  });
+
+    console.log(result.join("\n"));
+  } catch (error) {
+    console.error(error, "Error fetching holidays");
+  } finally {
+    process.exit(0);
+  }
+})();
