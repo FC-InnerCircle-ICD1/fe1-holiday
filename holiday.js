@@ -1,25 +1,11 @@
-const HOLIDAY_API_URL = "https://date.nager.at/api/v3";
+import {
+  fetchCountryInfo,
+  fetchHolidayYear,
+  fetchNextPublicHoliday,
+} from "./api.js";
+import { isHTTPError } from "./error.js";
+
 const [, , countryCodeInput, yearOrNext] = process.argv;
-
-class HTTPError extends Error {
-  constructor(response) {
-    super(`HTTP error! status: ${response.status}`);
-    this.code = response.status;
-    this.response = response;
-  }
-}
-
-const isHTTPError = (error) => error instanceof HTTPError;
-
-const requestJsonFromUrl = async (url) => {
-  const res = await fetch(url);
-
-  if (!res.ok) {
-    throw new HTTPError(res);
-  }
-
-  return res.json();
-};
 
 const checkInputValues = (countryCodeInput, yearOrNext) => {
   if (!countryCodeInput || !yearOrNext) {
@@ -35,10 +21,23 @@ const checkInputValues = (countryCodeInput, yearOrNext) => {
   }
 };
 
+const validateCountryCode = async (countryCode) => {
+  try {
+    await fetchCountryInfo(countryCode);
+    return true;
+  } catch (error) {
+    if (isHTTPError(error)) {
+      if (error.code === 404) {
+        console.error(`Wrong country code: ${countryCode}`);
+        return false;
+      }
+    }
+  }
+};
+
 const extractYearOrNext = (yearOrNext) => {
   const isNext =
-    isNaN(parseInt(yearOrNext)) &&
-    String(yearOrNext).toLocaleLowerCase() === "next";
+    isNaN(parseInt(yearOrNext)) && String(yearOrNext).toLowerCase() === "next";
   const year = isNext ? new Date().getFullYear() : parseInt(yearOrNext);
 
   return {
@@ -47,31 +46,12 @@ const extractYearOrNext = (yearOrNext) => {
   };
 };
 
-const fetchHolidayYear = async (country, year) => {
-  const fetchUrl = `${HOLIDAY_API_URL}/PublicHolidays/${year}/${country}`;
-  return requestJsonFromUrl(fetchUrl);
-};
+const validateInputValues = async (countryCode, yearOrNext) => {
+  checkInputValues(countryCode, yearOrNext);
+  const isValid = await validateCountryCode(countryCode);
 
-const fetchNextPublicHoliday = async (country) => {
-  const fetchUrl = `${HOLIDAY_API_URL}/NextPublicHolidays/${country}`;
-  return requestJsonFromUrl(fetchUrl);
-};
-
-const fetchCountryInfo = async (countryCode) => {
-  const fetchUrl = `${HOLIDAY_API_URL}/CountryInfo/${countryCode}`;
-  return requestJsonFromUrl(fetchUrl);
-};
-
-const checkCountryCode = async (countryCode) => {
-  try {
-    await fetchCountryInfo(countryCode);
-  } catch (error) {
-    if (isHTTPError(error)) {
-      if (error.code === 404) {
-        console.error(`Wrong country code: ${countryCode}`);
-        throw new Error("Wrong country code");
-      }
-    }
+  if (!isValid) {
+    throw new Error("Invalid country code");
   }
 };
 
@@ -88,8 +68,7 @@ const handleErrorFetchHolidays = (error) => {
 
 (async function () {
   try {
-    checkInputValues(countryCodeInput, yearOrNext);
-    await checkCountryCode(countryCodeInput);
+    await validateInputValues(countryCodeInput, yearOrNext);
   } catch (error) {
     process.exit(1);
   }
@@ -109,7 +88,6 @@ const handleErrorFetchHolidays = (error) => {
     const result = holidays.map((holiday) => {
       return [holiday.date, holiday.name, holiday.localName].join(" ");
     });
-
     console.log(result.join("\n"));
     process.exit(0);
   } catch (error) {
