@@ -5,7 +5,7 @@ async function getPublicHolidays(countryCode, year) {
         return;
     }
 
-fetch('https://date.nager.at/api/v3/PublicHolidays/2024/AT')
+fetch(`https://date.nager.at/api/v3/PublicHolidays/${year}/${countryCode}`)
     .then(response => response.json())
     .then(data => {
         const holidays = data;
@@ -20,7 +20,8 @@ fetch('https://date.nager.at/api/v3/PublicHolidays/2024/AT')
 
 }
 
-    const countryCode = process.argv[2];
-    const year = process.argv[3];
-    getPublicHolidays(countryCode, year);
+const countryCode = process.argv[2];
+const year = process.argv[3];
+getPublicHolidays(countryCode, year);
+    
     
