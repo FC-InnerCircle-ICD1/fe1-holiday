@@ -34,7 +34,7 @@ export const getHolidaysByYear = async (
   return holidays;
 };
 
-export const checkAvailableCountries = async (): Promise<Country[]> => {
+export const getAvailableCountries = async (): Promise<Country[]> => {
   const url = `${BASE_URL}/AvailableCountries`;
 
   const response = await fetch(url);

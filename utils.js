@@ -23,7 +23,7 @@ const isValidYear = (year) => {
 };
 exports.isValidYear = isValidYear;
 const validateCountry = (countryCode) => __awaiter(void 0, void 0, void 0, function* () {
-    const countries = yield (0, api_1.checkAvailableCountries)();
+    const countries = yield (0, api_1.getAvailableCountries)();
     const countryCodes = countries.map((country) => country.countryCode);
     return countryCodes.includes(countryCode);
 });

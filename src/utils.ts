@@ -1,4 +1,4 @@
-import { checkAvailableCountries } from "./api";
+import { getAvailableCountries } from "./api";
 
 export const getCurrentYear = (): string => {
   return new Date().getFullYear().toString();
@@ -14,7 +14,7 @@ export const isValidYear = (year: string): boolean => {
 };
 
 export const validateCountry = async (countryCode: string) => {
-  const countries = await checkAvailableCountries();
+  const countries = await getAvailableCountries();
   const countryCodes = countries.map((country) => country.countryCode);
 
   return countryCodes.includes(countryCode);
