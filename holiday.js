@@ -7,6 +7,7 @@ const countryCode = countryCodeInput.toUpperCase();
 const isNext =
   isNaN(parseInt(yearOrNext)) &&
   String(yearOrNext).toLocaleLowerCase() === "next";
+const TODAY = new Date();
 const year = isNext ? new Date().getFullYear() : parseInt(yearOrNext);
 
 const fetchHolidayYear = (_country, _year) => {
@@ -30,11 +31,16 @@ const fetchHolidayYear = (_country, _year) => {
   });
 };
 
-const result = fetchHolidayYear(countryCode, year)
+fetchHolidayYear(countryCode, year)
   .then((holidays) => {
-    return holidays.map((holiday) => {
-      return [holiday.date, holiday.name, holiday.localName].join(" ");
-    });
+    return holidays
+      .map((holiday) => {
+        if (new Date(holiday.date).getTime() <= TODAY.getTime()) {
+          return null;
+        }
+        return [holiday.date, holiday.name, holiday.localName].join(" ");
+      })
+      .filter((holiday) => holiday !== null);
   })
   .then((holidays) => {
     console.log(holidays.join("\n"));
