@@ -13,7 +13,11 @@ const fetchHolidays = async (countryCode, yearOrNext) => {
   }
 
   const response = await fetch(url);
-  if (response.status === 404) {
+
+  if (
+    response.status === 404 ||
+    (yearOrNext === "next" && response.status === 500)
+  ) {
     throw new Error("Wrong country code");
   }
 
