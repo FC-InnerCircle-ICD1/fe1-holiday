@@ -61,23 +61,6 @@ const fetchNextPublicHoliday = async (_country) => {
   return fetchClient(fetchUrl);
 };
 
-const checkAvailableCountriesCode = async (countryCode) => {
-  try {
-    const availableCountries = await fetchAvailableCountries();
-    const availableCountryCodes = availableCountries.map(
-      (country) => country.countryCode
-    );
-
-    if (!availableCountryCodes.includes(countryCode.toUpperCase())) {
-      console.error(`Country code ${countryCode} is not available`);
-      process.exit(1);
-    }
-  } catch (error) {
-    console.error("Wrong country code");
-    process.exit(1);
-  }
-};
-
 const handleHolidaysError = (error) => {
   if (error instanceof HTTPError) {
     if (error.code === 400) {
@@ -92,8 +75,6 @@ const handleHolidaysError = (error) => {
 
 (async function () {
   checkInputValues(countryCodeInput, yearOrNext);
-  checkAvailableCountriesCode(countryCodeInput);
-
   const { isNext, year } = extractYearOrNext(yearOrNext);
   const countryCode = countryCodeInput.toUpperCase();
 
