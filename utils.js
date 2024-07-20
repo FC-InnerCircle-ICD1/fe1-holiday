@@ -15,12 +15,6 @@ const getCurrentYear = () => {
     return new Date().getFullYear().toString();
 };
 exports.getCurrentYear = getCurrentYear;
-// export const parseArgs = (
-//   args: string[]
-// ): { countryCode: string; yearOrNext: string } => {
-//   const [countryCode, yearOrNext] = args;
-//   return { countryCode, yearOrNext };
-// };
 const isValidYear = (year) => {
     const yearNumber = parseInt(year, 10);
     if (!isNaN(yearNumber) && yearNumber >= 1000 && yearNumber <= 9999)

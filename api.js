@@ -16,7 +16,12 @@ const getHolidays = (year, countryCode) => __awaiter(void 0, void 0, void 0, fun
     try {
         const response = yield fetch(url);
         if (!response.ok) {
-            throw new Error(`Error fetching holidays:${response.status} ${response.statusText}`);
+            const message = response.status === 404
+                ? "CountryCode is unknown"
+                : response.status === 400
+                    ? "Validation failure"
+                    : "";
+            throw new Error(`Error fetching holidays:${response.status} ${response.statusText} ${message}`);
         }
         const holidays = yield response.json();
         return holidays;

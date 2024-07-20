@@ -14,7 +14,7 @@ const main = async () => {
   const year =
     yearOrNext.toLowerCase() === "next"
       ? (parseInt(getCurrentYear()) + 1).toString()
-      : yearOrNext;
+      : parseInt(yearOrNext, 10).toString();
 
   const holidays = await getHolidays(year, countryCode);
   outputHolidays(holidays);

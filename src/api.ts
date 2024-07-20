@@ -16,8 +16,14 @@ export const getHolidays = async (
     const response = await fetch(url);
 
     if (!response.ok) {
+      const message =
+        response.status === 404
+          ? "CountryCode is unknown"
+          : response.status === 400
+          ? "Validation failure"
+          : "";
       throw new Error(
-        `Error fetching holidays:${response.status} ${response.statusText}`
+        `Error fetching holidays:${response.status} ${response.statusText} ${message}`
       );
     }
     const holidays = await response.json();
