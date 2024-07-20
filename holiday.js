@@ -18,10 +18,12 @@ async function run() {
   if (res.status === 400) {
     return console.error(body.errors.year.join("\n"));
   }
-  if (res.status === 200) {
+  if (res.ok) {
     body.map(({ date, name, localName }) =>
       console.log(`${date} ${name} ${localName}`)
     );
+  } else {
+    console.error(res.statusText)
   }
 }
 
