@@ -1,10 +1,3 @@
-// process.argv 배열을 통해 명령줄 인수를 가져옵니다.
-const args = process.argv.slice(2); // 첫 두 개의 요소를 제외한 나머지 요소들을 가져옵니다.
-
-// 명령줄 인수들을 변수에 할당합니다.
-const country = args[0];
-const year = args[1];
-
 type Holiday = {
   date: string;
   localName: string;
@@ -72,8 +65,44 @@ const printYearsNextHoliday = async (country: string) => {
   }
 };
 
+const validateCountry = async (country: string) => {
+  const res = await fetch(HOLIDAY_API + `/CountryInfo/${country}`);
+
+  if (res.status === 404) {
+    console.log("Wrong country code");
+    return;
+  }
+};
+
+const main = async () => {
+  // process.argv 배열을 통해 명령줄 인수를 가져옵니다.
+  const args = process.argv.slice(2); // 첫 두 개의 요소를 제외한 나머지 요소들을 가져옵니다.
+
+  // 명령줄 인수들을 변수에 할당합니다.
+  const [country, year] = args;
+
+  if (!country) {
+    console.log("국가코드를 입력해주세요.");
+    return;
+  }
+
+  if (country.length !== 2) {
+    console.log("국가코드는 2자리로 입력해주세요.");
+    return;
+  }
+
+  if (!year) {
+    console.log("연도를 입력해주세요.");
+    return;
+  }
+
+  await validateCountry(country);
+
 if (year === "next") {
   printYearsNextHoliday(country);
 } else {
   printAllYearsHoliday(year, country);
 }
+};
+
+main();
