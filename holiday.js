@@ -11,24 +11,17 @@ if (!countryCode || !yearOrNext) {
 const getPublicHolidays = async (countryCode, yearOrNext) => {
   const uppercaseCountryCode = countryCode.toUpperCase();
   validateCountryCode(uppercaseCountryCode);
-  if (yearOrNext.toLowerCase() === "next") {
-    const url = `${API_URL}/NextPublicHolidays/${uppercaseCountryCode}`;
-    const response = await fetch(url);
-    if (response.ok) {
-      const data = await response.json();
-      printHolidays(data);
-    } else {
-      console.error(`Error: ${response.title}`);
-    }
+  const url =
+    yearOrNext.toLowerCase() === "next"
+      ? `${API_URL}/NextPublicHolidays/${uppercaseCountryCode}`
+      : `${API_URL}/PublicHolidays/${yearOrNext}/${uppercaseCountryCode}`;
+
+  const response = await fetch(url);
+  if (response.ok) {
+    const data = await response.json();
+    printHolidays(data);
   } else {
-    const url = `${API_URL}/PublicHolidays/${yearOrNext}/${uppercaseCountryCode}`;
-    const response = await fetch(url);
-    if (response.ok) {
-      const data = await response.json();
-      printHolidays(data);
-    } else {
-      console.error(`Error: ${response.title}`);
-    }
+    console.error(`Error: ${response.title}`);
   }
 };
 
