@@ -45,7 +45,7 @@ async function fetchHolidays() {
             }
 
         } else {
-            console.log("두번째 파라미터에 존재하지 않는 명령어 입력되었습니다.")
+            console.log("두번째 파라미터에 존재하지 않는 명령어가 입력되었습니다.")
         }
         // console.log('Public Holidays:', data);
     } catch (error) {
