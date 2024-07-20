@@ -77,7 +77,7 @@ const getPublicHolidays = (year, countryCode) => {
     }
   });
 
-  //   소통함수 실행
+  // api 실행
   req.end();
 };
 
