@@ -1,9 +1,9 @@
-const BASE_URL = 'https://date.nager.at/api/v3/PublicHolidays';
+const BASE_URL = 'https://date.nager.at/api/v3';
 
 const inputs = process.argv.slice(2);
 
 const fetchHolidays = async (country, year) => {
-  const response = await fetch(`${BASE_URL}/${year}/${country}`);
+  const response = await fetch(`${BASE_URL}/PublicHolidays/${year}/${country}`);
   if (response.status === 404) {
     throw new Error('Wrong country code');
   } else if (response.status === 500) {
@@ -11,6 +11,11 @@ const fetchHolidays = async (country, year) => {
   } else if (!response.ok) {
     throw new Error(`HTTP error! status: ${response.status}`);
   }
+  return response.json();
+};
+
+const fetchNextHolidays = async (country) => {
+  const response = await fetch(`${BASE_URL}/NextPublicHolidays/${country}`);
   return response.json();
 };
 
@@ -25,23 +30,15 @@ const filterFutureHolidays = (holidays, fromDate) => {
 };
 
 const getHolidays = async (country, yearOrNext) => {
-  const today = new Date();
-  const year = yearOrNext === 'next' ? today.getFullYear() : yearOrNext;
-  let holidays = await fetchHolidays(country, year);
-
   return yearOrNext === 'next'
-    ? filterFutureHolidays(holidays, today)
-    : holidays;
+    ? await fetchNextHolidays(country)
+    : await fetchHolidays(country, year);
 };
 
 // 메인 함수
 const main = async (country, yearOrNext) => {
-  try {
-    const holidays = await getHolidays(country, yearOrNext);
-    printHolidays(holidays);
-  } catch (error) {
-    console.error('Error fetching holidays:', error.message);
-  }
+  const holidays = await getHolidays(country, yearOrNext);
+  printHolidays(holidays);
 };
 
 if (inputs.length != 2) {
