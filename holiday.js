@@ -3,19 +3,22 @@ const [, , countryCode, yearOrNext] = process.argv;
 
 const BASE_URL = 'https://date.nager.at/api/v3';
 
-if (!countryCode) {
-  console.error(
-    'Error: Country code is missing.\nUsage: node holiday.js <CountryCode> <Year_or_Next>',
-  );
-  process.exit(1);
-}
+// argument 검증 체크
+const validateArgs = () => {
+  if (!countryCode) {
+    console.error(
+      'Error: Country code is missing.\nUsage: node holiday.js <CountryCode> <Year_or_Next>',
+    );
+    process.exit(1);
+  }
 
-if (!yearOrNext) {
-  console.error(
-    "Error: Year or 'next' is missing.\nUsage: node holiday.js <CountryCode> <Year_or_Next>",
-  );
-  process.exit(1);
-}
+  if (!yearOrNext) {
+    console.error(
+      "Error: Year or 'next' is missing.\nUsage: node holiday.js <CountryCode> <Year_or_Next>",
+    );
+    process.exit(1);
+  }
+};
 
 // 나라 코드
 const getAvailableCountries = async () => {
@@ -73,6 +76,7 @@ const getHolidays = async (countryCode, year) => {
 
   try {
     const response = await fetch(url);
+    console.log(response);
     if (!response.ok) {
       throw new Error(`Error fetching holidays: ${response.statusText}`);
     }
@@ -105,23 +109,19 @@ const displayHolidays = (holidays) => {
 
 const main = async () => {
   checkToAvailable();
+  validateArgs();
 
-  try {
-    if (yearOrNext.toLowerCase() === 'next') {
-      const holidays = await getUpcomingHolidays(countryCode);
-      displayHolidays(holidays);
-    } else {
-      const year = parseInt(yearOrNext, 10);
-      if (isNaN(year)) {
-        console.log("Year should be a number or 'next'");
-        process.exit(1);
-      }
-      const holidays = await getHolidays(countryCode, year);
-      displayHolidays(holidays);
+  if (yearOrNext.toLowerCase() === 'next') {
+    const holidays = await getUpcomingHolidays(countryCode);
+    displayHolidays(holidays);
+  } else {
+    const year = parseInt(yearOrNext, 10);
+    if (isNaN(year)) {
+      console.log("Year should be a number or 'next'");
+      process.exit(1);
     }
-  } catch (error) {
-    console.error('Error fetching holidays:', error);
-    process.exit(1);
+    const holidays = await getHolidays(countryCode, year);
+    displayHolidays(holidays);
   }
 };
 
