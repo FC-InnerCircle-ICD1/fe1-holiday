@@ -9,6 +9,12 @@ export const fetchYearHolidays = async (countryCode, year) => {
   const result = await fetch(
     `${API_HOST}/api/v3/PublicHolidays/${year}/${countryCode}`
   );
+
+  if (result.status === 400) {
+    console.error("연도가 범위를 벗어났습니다.");
+    process.exit(1);
+  }
+
   return await result.json();
 };
 
