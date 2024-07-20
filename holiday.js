@@ -14,11 +14,17 @@ const fetchHolidays = async (country, year) => {
   return response.json();
 };
 
+const printHolidays = (holidays) => {
+  holidays.forEach((holiday) => {
+    console.log(holiday.date, holiday.localName, holiday.name);
+  });
+};
+
 // 메인 함수
 const main = async (country, year) => {
   try {
     const holidays = await fetchHolidays(country, year);
-    console.log(holidays);
+    printHolidays(holidays);
   } catch (error) {
     console.error('Error fetching holidays:', error);
   }
