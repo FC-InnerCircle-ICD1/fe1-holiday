@@ -1,13 +1,13 @@
 {
   "name": "kimkichul",
   "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
+  "description": "휴일 조회 프로그램",
+  "main": "holiday.js",
   "scripts": {
     "start": "ts-node holiday.ts"
   },
   "keywords": [],
-  "author": "",
+  "author": "kichu7493",
   "license": "ISC",
   "devDependencies": {
     "@types/node": "^20.14.11",
