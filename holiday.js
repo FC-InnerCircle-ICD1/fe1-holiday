@@ -1,45 +1,5 @@
-const API_HOST = "https://date.nager.at";
-
-const EXPECTED_ARGV_LENGTH = 4;
-
-const isInteger = (str) => {
-  if (str.length === 0) return false;
-
-  const num = Number(str);
-  return Number.isInteger(num) && num.toString() === str;
-};
-
-const isArgumentsValid = (argv) => {
-  return (
-    process.argv.length === EXPECTED_ARGV_LENGTH &&
-    (isInteger(process.argv[3]) || process.argv[3] === "next")
-  );
-};
-
-const validateCountryCode = async (countryCode) => {
-  const result = await fetch(`${API_HOST}/api/v3/CountryInfo/${countryCode}`);
-  return result.ok;
-};
-
-const fetchYearHolidays = async (countryCode, year) => {
-  const result = await fetch(
-    `${API_HOST}/api/v3/PublicHolidays/${year}/${countryCode}`
-  );
-  return await result.json();
-};
-
-const fetchNextHolidays = async (countryCode) => {
-  const result = await fetch(
-    `${API_HOST}/api/v3/NextPublicHolidays/${countryCode}`
-  );
-  return await result.json();
-};
-
-const fetchHolidays = async (countryCode, year) => {
-  return year === "next"
-    ? await fetchNextHolidays(countryCode)
-    : await fetchYearHolidays(countryCode, year);
-};
+import { isArgumentsValid } from "./util.js";
+import { validateCountryCode, fetchHolidays } from "./api.js";
 
 const main = async () => {
   if (!isArgumentsValid(process.argv)) {
