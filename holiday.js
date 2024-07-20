@@ -4,6 +4,13 @@ const inputs = process.argv.slice(2);
 
 const fetchHolidays = async (country, year) => {
   const response = await fetch(`${BASE_URL}PublicHolidays/${year}/${country}`);
+  if (response.status === 404) {
+    throw new Error('Wrong country code');
+  } else if (response.status === 500) {
+    throw new Error('Server error');
+  } else if (!response.ok) {
+    throw new Error(`HTTP error! status: ${response.status}`);
+  }
   return response.json();
 };
 
@@ -13,7 +20,7 @@ const main = async (country, year) => {
     const holidays = await fetchHolidays(country, year);
     console.log(holidays);
   } catch (error) {
-    console.erxror('Error fetching holidays:', error);
+    console.error('Error fetching holidays:', error);
   }
 };
 
