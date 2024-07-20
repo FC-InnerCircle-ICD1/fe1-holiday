@@ -3,12 +3,13 @@ const [, , countryCodeInput, yearOrNext] = process.argv;
 
 const request = async (url) => {
   const res = await fetch(url);
+  const json = await res.json();
 
   if (!res.ok) {
-    throw new Error(`HTTP error! status: ${res.status}, ${res.json()}`);
+    throw new Error(`HTTP error! status: ${res.status}`);
   }
 
-  return res.json();
+  return json;
 };
 
 const checkInputValues = (countryCodeInput, yearOrNext) => {
