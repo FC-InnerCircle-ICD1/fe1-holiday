@@ -34,7 +34,7 @@ const printDay = (day) =>
 const main = async () => {
   const holidays =
     year === "next" ? await getNextHolidaysApi() : await getHolidaysApi();
-  holidays.forEach(printDay);
+  holidays && holidays.forEach(printDay);
 };
 
 main(countryCode, year);
