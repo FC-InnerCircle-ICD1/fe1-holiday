@@ -2,11 +2,14 @@ const https = require("https");
 
 // 함수 정의: year와 countryCode를 받아서 API 호출
 function getPublicHolidays(year, countryCode) {
+  let y = year == "next" ? new Date().getFullYear() : year;
+  const c = countryCode;
+
   // 옵션 설정
   const options = {
     hostname: "date.nager.at",
     port: 443,
-    path: `/api/v3/publicholidays/${year}/${countryCode}`,
+    path: `/api/v3/publicholidays/${y}/${c}`,
     method: "GET",
   };
 
@@ -25,9 +28,20 @@ function getPublicHolidays(year, countryCode) {
       res.on("end", () => {
         try {
           const holidays = JSON.parse(data);
+          // 오늘 이후 날짜를 구합니다.
+          const today = new Date();
+
+          //  양식에 맞는 배열처리
           holidays.forEach((holiday) => {
             const { date, name, localName } = holiday;
-            console.log(`${date} ${name} ${localName}`);
+            const holidayDate = new Date(date);
+
+            // year가 next인 경우, 오늘 이후의 공휴일만 출력
+            if (year === "next" && holidayDate > today) {
+              console.log(`${date} ${name} ${localName}`);
+            } else if (year !== "next") {
+              console.log(`${date} ${name} ${localName}`);
+            }
           });
         } catch (error) {
           console.error("Error parsing JSON:", error);
