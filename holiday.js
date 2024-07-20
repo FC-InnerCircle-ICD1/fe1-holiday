@@ -108,9 +108,9 @@ const handleHolidaysError = (error) => {
     });
 
     console.log(result.join("\n"));
+    process.exit(0);
   } catch (error) {
     handleHolidaysError(error);
-  } finally {
-    process.exit(0);
+    process.exit(1);
   }
 })();
