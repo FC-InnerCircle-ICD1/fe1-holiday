@@ -1,7 +1,11 @@
 // 명령줄 인수 받기
 const [, , countryCode, yearOrNext] = process.argv;
 
+const holidayApiUrlBase = 'https://date.nager.at/api/v3/';
+
 const BASE_URL = 'https://date.nager.at/api/v3';
+
+const upcomingHolidayApiUrl = holidayApiUrlBase + 'NextPublicHolidays';
 
 // argument 검증 체크
 const validateArgs = () => {
@@ -56,27 +60,26 @@ const checkToAvailable = async () => {
   }
 };
 
-// const getNextTodayHolidays = async (countryCode) => {
-//   const url = `${BASE_URL}/NextPublicHolidays/${countryCode}`;
+const getNextTodayHolidays = async (countryCode) => {
+  const url = `${BASE_URL}/NextPublicHolidays/${countryCode}`;
 
-//   try {
-//     const response = await fetch(url);
-//     if (!response.ok) {
-//       throw new Error('HTTP error');
-//     }
-//     const result = await response.json();
-//     return result;
-//   } catch (error) {
-//     console.error('Error fetching holiday data:', error);
-//   }
-// };
+  try {
+    const response = await fetch(url);
+    if (!response.ok) {
+      throw new Error('HTTP error');
+    }
+    const result = await response.json();
+    return result;
+  } catch (error) {
+    console.error('Error fetching holiday data:', error);
+  }
+};
 
 const getHolidays = async (countryCode, year) => {
   const url = `${BASE_URL}/publicholidays/${year}/${countryCode}`;
 
   try {
     const response = await fetch(url);
-    console.log(response);
     if (!response.ok) {
       throw new Error(`Error fetching holidays: ${response.statusText}`);
     }
