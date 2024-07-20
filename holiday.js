@@ -3,20 +3,37 @@ const BASE_URL = 'https://date.nager.at/api/v3';
 const inputs = process.argv.slice(2);
 
 const fetchHolidays = async (country, year) => {
-  const response = await fetch(`${BASE_URL}/PublicHolidays/${year}/${country}`);
-  if (response.status === 404) {
-    throw new Error('Wrong country code');
-  } else if (response.status === 500) {
-    throw new Error('Server error');
-  } else if (!response.ok) {
-    throw new Error(`HTTP error! status: ${response.status}`);
+  try {
+    const response = await fetch(
+      `${BASE_URL}/PublicHolidays/${year}/${country}`
+    );
+    if (response.status === 404) {
+      throw new Error('Wrong country code');
+    } else if (response.status === 500) {
+      throw new Error('Server error');
+    } else if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+    return response.json();
+  } catch (error) {
+    console.log(error.message);
   }
-  return response.json();
 };
 
 const fetchNextHolidays = async (country) => {
-  const response = await fetch(`${BASE_URL}/NextPublicHolidays/${country}`);
-  return response.json();
+  try {
+    const response = await fetch(`${BASE_URL}/NextPublicHolidays/${country}`);
+    if (response.status === 404) {
+      throw new Error('Wrong country code');
+    } else if (response.status === 500) {
+      throw new Error('Server error');
+    } else if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+    return response.json();
+  } catch (error) {
+    console.log(error.message);
+  }
 };
 
 const printHolidays = (holidays) => {
