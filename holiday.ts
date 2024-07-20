@@ -51,3 +51,9 @@ const printHolidays = (holidays: Holiday[]) => {
     console.log(`${holiday.date} ${holiday.localName} ${holiday.name}`);
   });
 };
+
+if (year === "next") {
+  printYearsNextHoliday(country);
+} else {
+  printAllYearsHoliday(year, country);
+}
