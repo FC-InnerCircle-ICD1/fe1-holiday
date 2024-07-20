@@ -19,6 +19,31 @@ type Holiday = {
 
 const HOLIDAY_API = "https://date.nager.at/api/v3/publicholidays";
 
+const getYearsHoliday = async (year: string | number, country: string) => {
+  try {
+    const res = await fetch(HOLIDAY_API + `/${year}/${country}`);
+    const holidays = (await res.json()) as Holiday[];
+
+    if (!res.ok) {
+      console.log("입력형식은 국가코드 2자리, 연도 4자리입니다.");
+
+      return [];
+    }
+
+    return holidays;
+  } catch (error) {
+    console.error(error);
+  } finally {
+    return [];
+  }
+};
+
+const printHolidays = (holidays: Holiday[]) => {
+  holidays.forEach((holiday) => {
+    console.log(`${holiday.date} ${holiday.name} ${holiday.localName}`);
+  });
+};
+
 const printAllYearsHoliday = async (year: string, country: string) => {
   const holidays = await getYearsHoliday(year, country);
 
@@ -37,19 +62,6 @@ const printYearsNextHoliday = async (country: string) => {
   });
 
   printHolidays(nextHoliday);
-};
-
-const getYearsHoliday = async (year: string | number, country: string) => {
-  const res = await fetch(HOLIDAY_API + `/${year}/${country}`);
-  const holidays = (await res.json()) as Holiday[];
-
-  return holidays;
-};
-
-const printHolidays = (holidays: Holiday[]) => {
-  holidays.forEach((holiday) => {
-    console.log(`${holiday.date} ${holiday.name} ${holiday.localName}`);
-  });
 };
 
 if (year === "next") {
