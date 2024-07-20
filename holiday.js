@@ -11,13 +11,12 @@ class HTTPError extends Error {
 
 const fetchClient = async (url) => {
   const res = await fetch(url);
-  const json = await res.json();
 
   if (!res.ok) {
     throw new HTTPError(res);
   }
 
-  return json;
+  return res.json();
 };
 
 const checkInputValues = (countryCodeInput, yearOrNext) => {
