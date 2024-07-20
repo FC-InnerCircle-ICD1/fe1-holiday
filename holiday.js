@@ -21,9 +21,11 @@ async function getHoliday() {
 
     try {
         const holidayData = await fetchHolidayData(url);
-        holidayData.forEach(data => {
-            console.log(`${data.date} ${data.name} ${data.localName}`);
-        });
+        if (holidayData) {
+            holidayData.forEach(data => {
+                console.log(`${data.date} ${data.name} ${data.localName}`);
+            });
+        }
     } catch (error) {
         console.error('Error data:', error);
     }
