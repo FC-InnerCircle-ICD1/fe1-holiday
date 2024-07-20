@@ -1,11 +1,7 @@
 // 명령줄 인수 받기
 const [, , countryCode, yearOrNext] = process.argv;
 
-const holidayApiUrlBase = 'https://date.nager.at/api/v3/';
-
 const BASE_URL = 'https://date.nager.at/api/v3';
-
-const upcomingHolidayApiUrl = holidayApiUrlBase + 'NextPublicHolidays';
 
 // argument 검증 체크
 const validateArgs = () => {
@@ -71,7 +67,7 @@ const getNextTodayHolidays = async (countryCode) => {
     const result = await response.json();
     return result;
   } catch (error) {
-    console.error('Error fetching holiday data:', error);
+    console.error('Error fetching next data:', error);
   }
 };
 
@@ -90,20 +86,6 @@ const getHolidays = async (countryCode, year) => {
   }
 };
 
-const getUpcomingHolidays = async (countryCode) => {
-  const currentDate = new Date();
-  const currentYear = currentDate.getFullYear();
-
-  let holidays = await getHolidays(countryCode, currentYear);
-
-  if (currentDate.getMonth() === 11) {
-    const nextYearHolidays = await getHolidays(countryCode, currentYear + 1);
-    holidays = holidays.concat(nextYearHolidays);
-  }
-
-  return holidays.filter((holiday) => new Date(holiday.date) >= currentDate);
-};
-
 const displayHolidays = (holidays) => {
   holidays.forEach((holiday) => {
     console.log(`${holiday.date} ${holiday.name} ${holiday.localName}`);
@@ -111,11 +93,11 @@ const displayHolidays = (holidays) => {
 };
 
 const main = async () => {
-  checkToAvailable();
+  await checkToAvailable();
   validateArgs();
 
   if (yearOrNext.toLowerCase() === 'next') {
-    const holidays = await getUpcomingHolidays(countryCode);
+    const holidays = await getNextTodayHolidays(countryCode);
     displayHolidays(holidays);
   } else {
     const year = parseInt(yearOrNext, 10);
