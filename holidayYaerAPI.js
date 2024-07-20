@@ -1,6 +1,7 @@
 async function getPublicHolidays(year, countryCode) {
     const url = `https://date.nager.at/api/v3/PublicHolidays/${year}/${countryCode}`;
 
+
     try {
         const response = await fetch(url, {
             method: 'GET',
@@ -9,18 +10,28 @@ async function getPublicHolidays(year, countryCode) {
             }
         });
 
-        if (!response.ok) {
-            throw new Error(`Request failed with status code ${response.status}`);
-        }
+
 
         const jsonData = await response.json();
-        const fixJsonData = jsonData.map((item) => ({
-            date: item.date,
-            localName: item.localName,
-            eName: item.name
-        }));
+        if (!response.ok) {
 
-        return fixJsonData;
+            const errorKeys = Object.keys(jsonData.errors)
+
+            let errorMessage = ''
+            errorKeys.map(key => jsonData.errors[key].map((item) => errorMessage += item + "\n"))
+            return errorMessage
+
+
+
+        } else {
+            const fixJsonData = jsonData.map((item) => ({
+                date: item.date,
+                localName: item.localName,
+                eName: item.name
+            }));
+
+            return fixJsonData;
+        }
     } catch (error) {
         throw error;
     }
