@@ -1,5 +1,9 @@
 const API_BASE_URL = 'https://date.nager.at/api/v3';
 
+function formatHoliday(holidays) {
+  return holidays.map(({ date, localName, name }) => [date, localName, name]);
+}
+
 async function searchHoliday(countryCode, year) {
   try {
     const response = await fetch(
@@ -39,6 +43,8 @@ async function execute() {
   // }
 
   const holidays = await searchHoliday(countryCode, year);
+  const formattedHolidays = formatHoliday(holidays);
+  formattedHolidays.forEach((holiday) => console.log(holiday.join(' ')));
 }
 
 execute();
