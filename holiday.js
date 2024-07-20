@@ -17,6 +17,10 @@ async function getHoliday() {
         console.error('Wrong country code');
         return;
     }
+    if (yearOrNext.toLowerCase() !== 'next' && !/^\d{4}$/.test(yearOrNext)) {
+        console.error('유효하지 않은 연도입니다.');
+        return;
+    }
 
     let url;
     if (yearOrNext.toLowerCase() === 'next') {
