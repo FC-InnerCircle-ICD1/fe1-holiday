@@ -9,7 +9,7 @@ export const isInteger = (str) => {
 
 export const isArgumentsValid = (argv) => {
   return (
-    process.argv.length === EXPECTED_ARGV_LENGTH &&
-    (isInteger(process.argv[3]) || process.argv[3] === "next")
+    argv.length === EXPECTED_ARGV_LENGTH &&
+    (isInteger(argv[3]) || argv[3] === "next")
   );
 };
