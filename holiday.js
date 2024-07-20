@@ -48,7 +48,7 @@ const fetchAvailableCountries = async () => {
 };
 
 const fetchNextPublicHoliday = async (_country) => {
-  const fetchUrl = `${HOLIDAY_API_URL}/NextPublicHolidaysWorldwide`;
+  const fetchUrl = `${HOLIDAY_API_URL}/NextPublicHolidays/${_country}`;
   return request(fetchUrl);
 };
 
