@@ -56,7 +56,8 @@ async function fetchHolidayData(url) {
     try {
         const response = await fetch(url);
         if (!response.ok) {
-            throw new Error('error');
+            console.error(`api fetch 오류 상태 코드: ${response.status}`)
+            return false;
         }
         return await response.json();
     } catch (error) {
