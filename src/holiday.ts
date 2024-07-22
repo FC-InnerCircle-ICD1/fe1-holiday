@@ -1,4 +1,4 @@
-import { Holiday, getHolidayByNext, getHolidaysByYear } from "./api";
+import { type Holiday, getNextHoliday, getHolidaysByYear } from "./api";
 import { parseArgs } from "./utils";
 
 const outputHolidays = (holidays: Holiday[]) => {
@@ -12,7 +12,7 @@ const main = async () => {
   try {
     const { countryCode, year, isNext } = await parseArgs(args);
     const holidays = isNext
-      ? await getHolidayByNext(countryCode)
+      ? await getNextHoliday(countryCode)
       : await getHolidaysByYear(year, countryCode);
     outputHolidays(holidays);
   } catch (error: any) {

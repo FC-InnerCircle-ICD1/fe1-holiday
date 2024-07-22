@@ -1,7 +1,5 @@
 const BASE_URL = "https://date.nager.at/api/v3";
 
-//return type 수정
-
 export type Holiday = {
   date: string;
   localName: string;
@@ -12,6 +10,18 @@ export type Country = {
   countryCode: string;
   name: string;
 };
+
+const handleHolidayByYeaErrorMsg = (status: number) => {
+  switch (status) {
+    case 404:
+      return "CountryCode is unknown";
+    case 400:
+      return "Validation failure";
+    default:
+      return "";
+  }
+};
+
 export const getHolidaysByYear = async (
   year: string,
   countryCode: string
@@ -20,12 +30,7 @@ export const getHolidaysByYear = async (
   const response = await fetch(url);
 
   if (!response.ok) {
-    const message =
-      response.status === 404
-        ? "CountryCode is unknown"
-        : response.status === 400
-        ? "Validation failure"
-        : "";
+    const message = handleHolidayByYeaErrorMsg(response.status);
     throw new Error(
       `Error fetching holidays:${response.status} ${response.statusText} ${message}`
     );
@@ -48,7 +53,7 @@ export const getAvailableCountries = async (): Promise<Country[]> => {
   return countries;
 };
 
-export const getHolidayByNext = async (
+export const getNextHoliday = async (
   countryCode: string
 ): Promise<Holiday[]> => {
   const url = `${BASE_URL}/NextPublicHolidays/${countryCode}`;
