@@ -1,28 +1,49 @@
-async function run() {
-  const [countryCode, years] = process.argv.slice(2);
-  if (typeof countryCode !== "string") {
-    return console.error("국가코드는 필수 입력입니다.");
-  }
-
-  if (typeof years !== "string") {
-    return console.error("연도는 필수 입력입니다.");
-  }
-
-  const isNextYear = years === "next";
-  const fetchUrl = isNextYear ? `https://date.nager.at/api/v3/NextPublicHolidays/${countryCode}` : `https://date.nager.at/api/v3/PublicHolidays/${years}/${countryCode}`;
-  const res = await fetch(fetchUrl);
-  const body = await res.json();
-  if ((isNextYear && res.status === 500) || res.status === 404) {
-    return console.error("Wrong country code");
-  }
-  if (res.status === 400) {
-    return console.error(body.errors.year.join("\n"));
-  }
-  if (res.ok) {
-    body.map(({ date, name, localName }) => console.log(`${date} ${name} ${localName}`));
-  } else {
-    console.error(res.statusText);
+class Exception extends Error {
+  constructor(message) {
+    super(message);
   }
 }
 
-run();
+async function holiday([countryCode, year]) {
+  if (typeof countryCode !== "string") {
+    throw new Exception("국가코드는 필수 입력입니다.");
+  }
+
+  if (typeof year !== "string") {
+    throw new Exception("연도는 필수 입력입니다.");
+  }
+
+  const isNextYear = year === "next";
+  const fetchUrl = `https://date.nager.at/api/v3/${isNextYear ? `NextPublicHolidays/${countryCode}` : `PublicHolidays/${year}/${countryCode}`}`;
+  const res = await fetch(fetchUrl);
+
+  if (res.ok) {
+    const body = await res.json();
+    return body.map(({ date, name, localName }) => `${date} ${name} ${localName}`).join("\n");
+  }
+
+  // 실패 시에 대한 처리
+  if (isNextYear) {
+    if (res.status === 500) throw new Exception("Wrong country code");
+  } else {
+    if (res.status === 404) throw new Exception("Wrong country code");
+    if (res.status === 400) throw new Exception("Wrong Year");
+  }
+  throw new Exception(`HTTP StatusCode: ${res.status} \n${res.statusText}`);
+}
+
+async function run() {
+  try {
+    console.log(await holiday(process.argv.slice(2)));
+  } catch (e) {
+    if (e instanceof Exception) {
+      console.error(e.message);
+    } else {
+      console.error(e);
+    }
+  }
+}
+
+if (process.argv[1] === __filename) run();
+
+module.exports = { holiday, Exception };
