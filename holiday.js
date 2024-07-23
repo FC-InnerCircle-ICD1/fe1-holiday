@@ -5,9 +5,10 @@ class Exception extends Error {
 }
 
 async function holiday([countryCode, year]) {
-  if (typeof countryCode !== "string") {
-    throw new Exception("국가코드는 필수 입력입니다.");
-  }
+  // 인자가 없는 경우, 도움말을 출력하도록 수정
+  // if (typeof countryCode !== "string") {
+  //   throw new Exception("국가코드는 필수 입력입니다.");
+  // }
 
   if (typeof year !== "string") {
     throw new Exception("연도는 필수 입력입니다.");
@@ -32,7 +33,17 @@ async function holiday([countryCode, year]) {
   throw new Exception(`HTTP StatusCode: ${res.status} \n${res.statusText}`);
 }
 
+function help() {
+  console.log("국가별 공휴일 조회 프로그램");
+  console.log("Usage");
+  console.log("node holiday.js [국가코드] [연도_또는_next]");
+  console.log("Example");
+  console.log("node holiday.js kr next");
+}
+
 async function run() {
+  if (process.argv.length === 2) return help();
+
   try {
     console.log(await holiday(process.argv.slice(2)));
   } catch (e) {
