@@ -2,7 +2,7 @@ import { Holiday } from "./types/holiday";
 
 export const HOLIDAY_API = "https://date.nager.at/api/v3";
 
-export const fetchHolidays = async <T>(
+export const fetchHolidays = async <Holiday>(
   url: string,
   fetchCallBack: (url: string) => Promise<Response>
 ) => {
@@ -19,7 +19,7 @@ export const fetchHolidays = async <T>(
       return [];
     }
 
-    return res.json() as Promise<T[]>;
+    return res.json() as Promise<Holiday[]>;
   } catch (e) {
     console.log("에러 발생");
     console.error(e);
