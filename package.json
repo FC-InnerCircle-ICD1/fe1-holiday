@@ -2,9 +2,9 @@
   "name": "kimkichul",
   "version": "1.0.0",
   "description": "휴일 조회 프로그램",
-  "main": "holiday.js",
+  "main": "index.ts",
   "scripts": {
-    "start": "ts-node holiday.ts"
+    "start": "ts-node ./src/index.ts"
   },
   "keywords": [],
   "author": "kichu7493",
