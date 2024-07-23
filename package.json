@@ -1,0 +1,18 @@
+{
+  "name": "kimkichul",
+  "version": "1.0.0",
+  "description": "휴일 조회 프로그램",
+  "main": "index.ts",
+  "scripts": {
+    "start": "ts-node ./src/index.ts",
+    "test": "ts-node ./src/test/test.ts"
+  },
+  "keywords": [],
+  "author": "kichu7493",
+  "license": "ISC",
+  "devDependencies": {
+    "@types/node": "^20.14.11",
+    "ts-node": "^6.0.1",
+    "typescript": "^5.5.3"
+  }
+}
