@@ -4,7 +4,8 @@
   "description": "휴일 조회 프로그램",
   "main": "index.ts",
   "scripts": {
-    "start": "ts-node ./src/index.ts"
+    "start": "ts-node ./src/index.ts",
+    "test": "ts-node ./src/test/test.ts"
   },
   "keywords": [],
   "author": "kichu7493",
