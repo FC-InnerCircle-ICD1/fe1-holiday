@@ -1,0 +1,22 @@
+{
+  "name": "fe1-holiday",
+  "version": "1.0.0",
+  "description": "커맨드 라인에서 각 국가의 공휴일을 확인할 수 있는 Node.js 애플리케이션",
+  "main": "holiday.js",
+  "type": "module",
+  "scripts": {
+    "test": "mocha --require @babel/register"
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@babel/core": "^7.24.9",
+    "@babel/preset-env": "^7.24.8",
+    "@babel/register": "^7.24.6",
+    "chai": "^4.3.4",
+    "esm": "^3.2.25",
+    "fetch-mock": "^10.1.1",
+    "mocha": "^10.6.0",
+    "sinon": "^9.2.4"
+  }
+}
