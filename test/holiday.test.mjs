@@ -1,5 +1,5 @@
 import { expect } from 'chai';
-import nock from 'nock';
+import fetchMock from 'fetch-mock';
 import sinon from 'sinon';
 
 import {
@@ -15,13 +15,15 @@ import {
 const API_URL = 'https://date.nager.at/api/v3';
 
 describe('Holiday Module', () => {
+  afterEach(() => {
+    fetchMock.restore();
+  });
+
   describe('getSupportedCountryCodes', () => {
       it('should return a list of supported country codes', async () => {
           const mockResponse = [{ countryCode: 'US' }, { countryCode: 'KR' }];
 
-          nock(API_URL)
-              .get('/AvailableCountries')
-              .reply(200, mockResponse);
+          fetchMock.get(`${API_URL}/AvailableCountries`, mockResponse);
 
           const countryCodes = await getSupportedCountryCodes();
           expect(countryCodes).to.include('US');
@@ -29,14 +31,12 @@ describe('Holiday Module', () => {
       });
 
       it('should throw an error if the request fails', async () => {
-          nock(API_URL)
-              .get('/AvailableCountries')
-              .reply(500);
+          fetchMock.get(`${API_URL}/AvailableCountries`, 500);
 
           try {
               await getSupportedCountryCodes();
           } catch (error) {
-              expect(error.message).to.equal('Error: 500');
+              expect(error.message).to.equal('Error: Error: 500');
           }
       });
   });
@@ -211,25 +211,21 @@ describe('Holiday Module', () => {
               }
           ];
 
-          nock(API_URL)
-              .get('/PublicHolidays/2024/KR')
-              .reply(200, mockResponse);
+          fetchMock.get(`${API_URL}/PublicHolidays/2024/KR`, mockResponse);
 
           const holidays = await getHolidaysForYear('KR', 2024);
           expect(holidays).to.deep.equal(mockResponse);
       });
 
       it('should throw an error if the request fails', async () => {
-          nock(API_URL)
-              .get('/PublicHolidays/2024/KR')
-              .reply(500);
+        fetchMock.get(`${API_URL}/PublicHolidays/2024/KR`, 500);
 
-          try {
-              await getHolidaysForYear('KR', 2024);
-          } catch (error) {
-              expect(error.message).to.equal('Error: 500');
-          }
-      });
+        try {
+            await getHolidaysForYear('KR', 2024);
+        } catch (error) {
+            expect(error.message).to.equal('Error: Error: 500');
+        }
+    });
   });
 
   describe('getNextPublicHolidays', () => {
@@ -402,25 +398,21 @@ describe('Holiday Module', () => {
               }
           ];
 
-          nock(API_URL)
-              .get('/NextPublicHolidays/KR')
-              .reply(200, mockResponse);
+          fetchMock.get(`${API_URL}/NextPublicHolidays/KR`, mockResponse);
 
           const holidays = await getNextPublicHolidays('KR');
           expect(holidays).to.deep.equal(mockResponse);
       });
 
       it('should throw an error if the request fails', async () => {
-          nock(API_URL)
-              .get('/NextPublicHolidays/KR')
-              .reply(500);
+        fetchMock.get(`${API_URL}/NextPublicHolidays/KR`, 500);
 
-          try {
-              await getNextPublicHolidays('KR');
-          } catch (error) {
-              expect(error.message).to.equal('Error: 500');
-          }
-      });
+        try {
+            await getNextPublicHolidays('KR');
+        } catch (error) {
+            expect(error.message).to.equal('Error: Error: 500');
+        }
+    });
   });
 
   describe('printHolidays', () => {
