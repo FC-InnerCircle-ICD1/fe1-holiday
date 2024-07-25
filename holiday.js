@@ -44,8 +44,7 @@ let nextYn = false;
 
 
 if (year === "next") {
-    var d = new Date();
-    year = d.getFullYear();
+    year = new Date().getFullYear();
     nextYn = true;
 }
 
