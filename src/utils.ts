@@ -1,5 +1,7 @@
 import { getAvailableCountries } from "./api";
 
+const MIN_YEAR = 1900;
+const MAX_YEAR = 9999;
 export const getCurrentYear = (): string => {
   return new Date().getFullYear().toString();
 };
@@ -7,16 +9,15 @@ export const getCurrentYear = (): string => {
 export const validateYear = (year: string) => {
   const yearNumber = parseInt(year, 10);
 
-  if (!isNaN(yearNumber) && yearNumber >= 1900 && yearNumber <= 9999)
+  if (!isNaN(yearNumber) && yearNumber >= MIN_YEAR && yearNumber <= MAX_YEAR)
     return true;
   return false;
 };
 
 export const validateCountry = async (countryCode: string) => {
   const countries = await getAvailableCountries();
-  const countryCodes = countries.map((country) => country.countryCode);
 
-  return countryCodes.includes(countryCode);
+  return countries.some((country) => country.countryCode === countryCode);
 };
 
 export const parseArgs = async (args: string[]) => {
