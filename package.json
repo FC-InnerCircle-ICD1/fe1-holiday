@@ -1,0 +1,21 @@
+{
+  "name": "fe1-holiday",
+  "version": "1.0.0",
+  "description": "커맨드 라인에서 각 국가의 공휴일을 확인할 수 있는 Node.js 애플리케이션",
+  "main": "dist/holiday.js",
+  "scripts": {
+    "test": "NODE_OPTIONS='--loader ts-node/esm' node test/test.ts",
+    "build": "tsc"
+  },
+  "type": "module",
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "typescript": "^5.5.3"
+  },
+  "devDependencies": {
+    "@types/node": "^20.14.12",
+    "ts-node": "^10.9.2"
+  }
+}
