@@ -1,13 +1,5 @@
 const API_URL = "https://date.nager.at/api/v3";
 
-const args = process.argv.slice(2);
-const [countryCode, yearOrNext] = args;
-
-if (!countryCode || !yearOrNext) {
-  console.error("Error: Not enough parameters.");
-  process.exit(1);
-}
-
 const getPublicHolidays = async (countryCode, yearOrNext) => {
   const uppercaseCountryCode = countryCode.toUpperCase();
   validateCountryCode(uppercaseCountryCode);
@@ -27,11 +19,15 @@ const getPublicHolidays = async (countryCode, yearOrNext) => {
 
 const validateCountryCode = async (countryCode) => {
   const url = `${API_URL}/CountryInfo/${countryCode}`;
-  const response = await fetch(url);
-  if (!response.ok) {
-    console.error(
-      `Error: Wrong country code. Input countryCode: ${countryCode}`
-    );
+  const { ok, status } = await fetch(url);
+
+  if (!ok) {
+    if (status === 404)
+      console.error(
+        `Error: Wrong country code. Input countryCode: ${countryCode}`
+      );
+    else if (status === 500) console.error("Error: server error.");
+    else console.error(`Error: status code (${status})`);
     process.exit(1);
   }
 };
@@ -41,5 +37,13 @@ const printHolidays = (holidays) => {
     console.log(`${v.date} ${v.localName} ${v.name}`);
   });
 };
+
+const args = process.argv.slice(2);
+const [countryCode, yearOrNext] = args;
+
+if (!countryCode || !yearOrNext) {
+  console.error("Error: Not enough parameters.");
+  process.exit(1);
+}
 
 getPublicHolidays(countryCode, yearOrNext);
