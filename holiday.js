@@ -1,3 +1,4 @@
+#!/usr/bin/env
 class Exception extends Error {
   constructor(message) {
     super(message);
