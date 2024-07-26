@@ -1,74 +1,49 @@
-const { Exception, holiday } = require("./holiday.js");
+const { describe, it } = require("node:test");
+const assert = require("assert");
+const { holiday } = require("./holiday.js");
 
-function pass() {
-  process.stdout.write(" ✅\n");
-}
-
-function fail(e) {
-  process.stdout.write(" ❌\n");
-  console.error(e);
-}
-
-async function test() {
-  try {
-    process.stdout.write("1. 국가코드와 연도 값은 필수여야한다");
-    await holiday(["kr"]);
-  } catch (e) {
-    if (e instanceof Exception && e.message === "연도는 필수 입력입니다.") {
-      pass();
-    } else {
-      fail(e);
+describe("국가별 공휴일 조회 프로그램", () => {
+  it("국가코드와 연도 값은 필수입니다.", async () => {
+    try {
+      await holiday(["kr"]);
+    } catch (e) {
+      assert.strictEqual("연도는 필수 입력입니다.", e.message);
     }
-  }
+  });
 
-  try {
-    process.stdout.write("2-1. 올바르지 않은 국가코드가 전달되면 'Wrong country code'를 출력한다");
-    await holiday(["unknown", "2024"]);
-  } catch (e) {
-    if (e instanceof Exception && e.message === "Wrong country code") {
-      pass();
-    } else {
-      fail(e);
+  it("올바르지 않은 연도가 전달되면 'Wrong Year'를 출력한다", async () => {
+    try {
+      await holiday(["kr", "unknown"]);
+    } catch (e) {
+      assert.strictEqual("Wrong Year", e.message);
     }
-  }
+  });
 
-  try {
-    process.stdout.write("2-2. 올바르지 않은 국가코드가 전달되면 'Wrong country code'를 출력한다");
-    await holiday(["unknown", "next"]);
-  } catch (e) {
-    if (e instanceof Exception && e.message === "Wrong country code") {
-      pass();
-    } else {
-      fail(e);
-    }
-  }
+  describe("특정 연도별 조회 시", () => {
+    it("올바르지 않은 국가코드가 전달되면 'Wrong country code'를 출력한다", async () => {
+      try {
+        await holiday(["unknown", "2024"]);
+      } catch (e) {
+        assert.strictEqual("Wrong country code", e.message);
+      }
+    });
 
-  try {
-    process.stdout.write("3. 올바르지 않은 연도가 전달되면 'Wrong Year'를 출력한다");
-    await holiday(["kr", "unknown"]);
-  } catch (e) {
-    if (e instanceof Exception && e.message === "Wrong Year") {
-      pass();
-    } else {
-      fail(e);
-    }
-  }
+    it("공휴일을 조회한다.", async () => {
+      await holiday(["kr", "2024"]);
+    });
+  });
 
-  try {
-    process.stdout.write("4-1. 년도별 공휴일 조회");
-    await holiday(["kr", "2024"]);
-    pass();
-  } catch (e) {
-    fail(e);
-  }
+  describe("next 조회 시", () => {
+    it("올바르지 않은 국가코드가 전달되면 'Wrong country code'를 출력한다", async () => {
+      try {
+        await holiday(["unknown", "next"]);
+      } catch (e) {
+        assert.strictEqual("Wrong country code", e.message);
+      }
+    });
 
-  try {
-    process.stdout.write("4-2. 오늘 이후 1년동안의 공휴일 조회");
-    await holiday(["kr", "next"]);
-    pass();
-  } catch (e) {
-    fail(e);
-  }
-}
-
-test();
+    it("공휴일을 조회한다.", async () => {
+      await holiday(["kr", "next"]);
+    });
+  });
+});
