@@ -3,38 +3,36 @@ async function getPublicHolidays(countryCode, year) {
     if (!countryCode || !year) {
         console.error('Country code and year are required.');
         return;
-    }
-    else if(countryCode.length !== 2){
+    } else if (countryCode.length !== 2) {
         console.error('Wrong country code');
         return;
     }
-        
 
-fetch(`https://date.nager.at/api/v3/PublicHolidays/${year}/${countryCode}`)
-    .then(response => response.json())
-    .then(data => {
-        if(data.status === 404){
-            console.error('Country code not found');
+    try {
+        const response = await fetch(`https://date.nager.at/api/v3/PublicHolidays/${year}/${countryCode}`);
+        const data = await response.json();
+
+        if (data.status === 404) {
+            console.error('CountryCode is unknown');
             return;
         } else if (data.status === 400) {
             console.error('Validation failure');
             return;
         }
+
         data.forEach(holiday => {
-            if(nextYn) {
+            if (nextYn) {
                 const holidayDate = new Date(holiday.date);
                 if (holidayDate > today) {
-                    console.log(holiday.date ,' ',holiday.name ,' ',holiday.localName);
+                    console.log(holiday.date, ' ', holiday.name, ' ', holiday.localName);
                 }
-            } else 
-                console.log(holiday.date ,' ',holiday.name ,' ',holiday.localName);
+            } else {
+                console.log(holiday.date, ' ', holiday.name, ' ', holiday.localName);
+            }
         });
-    })
-    .catch(error => {
+    } catch (error) {
         console.error('Error retrieving public holidays:', error.message);
-    });
-
-
+    }
 }
 
 const countryCode = process.argv[2];
